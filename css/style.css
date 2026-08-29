@@ -1,0 +1,285 @@
+/* ============================================
+   LF Creative — Landing Page Geral
+   Design tokens definidos na Etapa 4 (Design)
+   ============================================ */
+
+:root {
+  /* Cores */
+  --color-white: #FFFFFF;
+  --color-black: #0A0A0A;
+  --color-teal-deep: #0E3A47;
+  --color-teal-mid: #1F6478;
+  --color-cyan: #5CB8CC;
+  --color-metal-a: #9CA3AA;
+  --color-metal-b: #D4D7DA;
+  --color-text-muted: #4A4A4A;
+  --color-border: #EAEAEA;
+
+  /* Tipografia */
+  --font-display: 'Gilroy', 'Poppins', sans-serif; /* Gilroy: adicionar @font-face com os arquivos licenciados antes do deploy */
+  --font-body: 'General Sans', sans-serif;
+
+  /* Espaçamento (escala 8px) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 40px;
+  --space-5: 64px;
+  --space-6: 96px;
+
+  /* Breakpoints de referência (usados nos comentários das media queries) */
+  --bp-tablet: 768px;
+  --bp-desktop: 1200px;
+}
+
+/* ============================================
+   Reset básico
+   ============================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  color: var(--color-black);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+/* Respeita usuários que preferem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* Foco visível — nunca remover sem substituir */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 var(--space-2);
+}
+
+/* ============================================
+   Componentes reutilizáveis
+   ============================================ */
+.btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: var(--color-cyan);
+  color: var(--color-black);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(92,184,204,0.35); }
+
+.btn-outline {
+  display: inline-block;
+  padding: 12px 26px;
+  border: 1.5px solid currentColor;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 4px;
+  background: transparent;
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--color-teal-mid);
+}
+
+.divider {
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-metal-a), var(--color-metal-b), var(--color-metal-a));
+  border: none;
+}
+
+.card {
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+.card .icon { width: 28px; height: 28px; margin-bottom: var(--space-1); color: var(--color-teal-mid); }
+.card p { font-size: 15px; color: var(--color-text-muted); margin-top: 6px; }
+
+/* ============================================
+   Header / navegação
+   ============================================ */
+.site-header {
+  position: sticky;
+  top: 0;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  z-index: 50;
+}
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+.site-header .logo { font-family: var(--font-display); font-weight: 800; font-size: 18px; text-decoration: none; color: var(--color-black); }
+.site-header .btn { padding: 10px 20px; font-size: 14px; }
+
+/* ============================================
+   Hero
+   ============================================ */
+.hero {
+  background: var(--color-white);
+  text-align: center;
+  padding: var(--space-6) var(--space-2);
+}
+.hero h1 {
+  font-size: clamp(30px, 6vw, 54px);
+  max-width: 800px;
+  margin: 0 auto var(--space-2);
+}
+.hero p {
+  font-size: 18px;
+  color: var(--color-text-muted);
+  max-width: 560px;
+  margin: 0 auto var(--space-3);
+}
+.hero .actions { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center; }
+
+/* ============================================
+   O que fazemos
+   ============================================ */
+.servicos { background: var(--color-white); padding: var(--space-6) var(--space-2); }
+.servicos h2 { font-size: 28px; text-align: center; margin-bottom: var(--space-4); }
+.grid-servicos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+
+/* ============================================
+   Pra quem
+   ============================================ */
+.pra-quem { background: var(--color-white); text-align: center; padding: var(--space-6) var(--space-2); }
+.pra-quem h2 { font-size: 26px; margin-bottom: var(--space-2); max-width: 640px; margin-left: auto; margin-right: auto; }
+.pra-quem p { max-width: 620px; margin: 0 auto var(--space-3); color: var(--color-text-muted); }
+
+/* ============================================
+   Prova social (contraste preto)
+   ============================================ */
+.prova { background: var(--color-black); color: var(--color-white); padding: var(--space-6) var(--space-2); }
+.prova h2 { font-size: 26px; margin-bottom: var(--space-3); color: var(--color-white); }
+.prova ul { list-style: none; }
+.prova li {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid #262626;
+  font-size: 16px;
+  color: #DDD;
+}
+.prova li:last-child { border-bottom: none; }
+.prova .brands {
+  margin-top: var(--space-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: .02em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.prova .brands span.sep { color: var(--color-cyan); }
+
+/* ============================================
+   Como funciona
+   ============================================ */
+.funciona { background: var(--color-white); padding: var(--space-6) var(--space-2); }
+.funciona h2 { font-size: 26px; text-align: center; margin-bottom: var(--space-1); }
+.funciona .destaque {
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--color-teal-mid);
+  margin: 0 auto var(--space-5);
+  max-width: 560px;
+}
+.steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+.step .num { font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--color-metal-a); margin-bottom: var(--space-1); }
+.step h3 { font-size: 17px; margin-bottom: 6px; }
+.step p { font-size: 14px; color: var(--color-text-muted); }
+
+/* ============================================
+   LF Flow (teal sólido — separado do premium)
+   ============================================ */
+.flow { background: var(--color-teal-deep); color: var(--color-white); text-align: center; padding: var(--space-6) var(--space-2); }
+.flow h2 { font-size: 28px; margin-bottom: var(--space-2); }
+.flow p { max-width: 560px; margin: 0 auto var(--space-3); color: #E6F2F5; }
+
+/* ============================================
+   Contato / Fechamento
+   ============================================ */
+.contato { background: var(--color-white); text-align: center; padding: var(--space-6) var(--space-2); }
+.contato h2 { font-size: 30px; margin-bottom: var(--space-3); max-width: 600px; margin-left: auto; margin-right: auto; }
+
+/* ============================================
+   FAQ
+   ============================================ */
+.faq { background: var(--color-white); padding: var(--space-6) var(--space-2) var(--space-5); }
+.faq h2 { font-size: 22px; text-align: center; margin-bottom: var(--space-3); }
+.faq-item { padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border); }
+.faq-item strong { display: block; margin-bottom: 6px; font-family: var(--font-display); font-weight: 700; font-size: 15px; }
+.faq-item p { font-size: 14px; color: var(--color-text-muted); }
+
+/* ============================================
+   Footer
+   ============================================ */
+.site-footer {
+  background: var(--color-black);
+  color: #888;
+  text-align: center;
+  padding: var(--space-3) var(--space-2);
+  font-size: 13px;
+}
+.site-footer a { color: #AAA; text-decoration: none; }
+
+/* ============================================
+   Responsivo — mobile-first
+   ============================================ */
+
+/* Tablet (~768px) */
+@media (min-width: 768px) {
+  .grid-servicos { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: repeat(3, 1fr); }
+  .hero { padding: var(--space-6) var(--space-4); }
+}
+
+/* Desktop (~1200px) */
+@media (min-width: 1200px) {
+  .grid-servicos { grid-template-columns: repeat(4, 1fr); }
+}

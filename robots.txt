@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lfcreative.com.br/sitemap.xml
