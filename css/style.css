@@ -163,8 +163,8 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: var(--space-1);
-  padding-bottom: var(--space-1);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .site-header .logo { display: inline-flex; align-items: center; text-decoration: none; }
 .site-header .logo img { height: 100px; width: auto; display: block; }
