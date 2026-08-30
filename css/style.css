@@ -167,7 +167,7 @@ h1, h2, h3 {
   padding-bottom: var(--space-2);
 }
 .site-header .logo { display: inline-flex; align-items: center; text-decoration: none; }
-.site-header .logo img { height: 52px; width: auto; display: block; }
+.site-header .logo img { height: 82px; width: auto; display: block; }
 .site-header .btn { padding: 10px 20px; font-size: 14px; }
 
 /* ============================================
