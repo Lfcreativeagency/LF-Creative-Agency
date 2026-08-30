@@ -3,6 +3,28 @@
    Design tokens definidos na Etapa 4 (Design)
    ============================================ */
 
+@font-face {
+  font-family: 'LEMON MILK';
+  src: url('../assets/fonts/lemonmilk-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LEMON MILK';
+  src: url('../assets/fonts/lemonmilk-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LEMON MILK';
+  src: url('../assets/fonts/lemonmilk-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Cores */
   --color-white: #FFFFFF;
@@ -16,7 +38,7 @@
   --color-border: #EAEAEA;
 
   /* Tipografia */
-  --font-display: 'Gilroy', 'Poppins', sans-serif; /* Gilroy: adicionar @font-face com os arquivos licenciados antes do deploy */
+  --font-display: 'LEMON MILK', 'Poppins', sans-serif; /* fallback só pra enquanto a fonte carrega */
   --font-body: 'General Sans', sans-serif;
 
   /* Espaçamento (escala 8px) */
@@ -61,7 +83,7 @@ button:focus-visible {
 
 h1, h2, h3 {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
@@ -106,7 +128,7 @@ h1, h2, h3 {
 
 .eyebrow {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: .04em;
@@ -144,7 +166,8 @@ h1, h2, h3 {
   padding-top: var(--space-2);
   padding-bottom: var(--space-2);
 }
-.site-header .logo { font-family: var(--font-display); font-weight: 800; font-size: 18px; text-decoration: none; color: var(--color-black); }
+.site-header .logo { display: inline-flex; align-items: center; text-decoration: none; }
+.site-header .logo img { height: 32px; width: auto; display: block; }
 .site-header .btn { padding: 10px 20px; font-size: 14px; }
 
 /* ============================================
@@ -190,6 +213,13 @@ h1, h2, h3 {
    Prova social (contraste preto)
    ============================================ */
 .prova { background: var(--color-black); color: var(--color-white); padding: var(--space-6) var(--space-2); }
+.prova .prova-img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: var(--space-4);
+}
 .prova h2 { font-size: 26px; margin-bottom: var(--space-3); color: var(--color-white); }
 .prova ul { list-style: none; }
 .prova li {
@@ -230,7 +260,7 @@ h1, h2, h3 {
   grid-template-columns: 1fr;
   gap: var(--space-3);
 }
-.step .num { font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--color-metal-a); margin-bottom: var(--space-1); }
+.step .num { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--color-metal-a); margin-bottom: var(--space-1); }
 .step h3 { font-size: 17px; margin-bottom: 6px; }
 .step p { font-size: 14px; color: var(--color-text-muted); }
 
