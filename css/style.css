@@ -143,11 +143,12 @@ h1, h2, h3 {
 
 .card {
   padding: var(--space-3);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255, 255, 255, 0.2); /* borda clara, a cinza original sumiria no fundo escuro */
   border-radius: 8px;
 }
-.card .icon { width: 28px; height: 28px; margin-bottom: var(--space-1); color: var(--color-teal-mid); }
-.card p { font-size: 15px; color: var(--color-text-muted); margin-top: 6px; }
+.card .icon { width: 28px; height: 28px; margin-bottom: var(--space-1); color: var(--color-white); }
+.card .eyebrow { color: var(--color-white); }
+.card p { font-size: 15px; color: rgba(255, 255, 255, 0.85); margin-top: 6px; } /* branco levemente suavizado, mais confortável de ler que branco puro */
 
 /* ============================================
    Header / navegação
@@ -194,8 +195,8 @@ h1, h2, h3 {
 /* ============================================
    O que fazemos
    ============================================ */
-.servicos { background: var(--color-white); padding: var(--space-6) var(--space-2); }
-.servicos h2 { font-size: 28px; text-align: center; margin-bottom: var(--space-4); }
+.servicos { background: var(--color-teal-mid); padding: var(--space-6) var(--space-2); }
+.servicos h2 { font-size: 28px; text-align: center; margin-bottom: var(--space-4); color: var(--color-white); }
 .grid-servicos {
   display: grid;
   grid-template-columns: 1fr;
@@ -263,13 +264,6 @@ h1, h2, h3 {
 .step .num { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--color-metal-a); margin-bottom: var(--space-1); }
 .step h3 { font-size: 17px; margin-bottom: 6px; }
 .step p { font-size: 14px; color: var(--color-text-muted); }
-
-/* ============================================
-   LF Flow (teal sólido — separado do premium)
-   ============================================ */
-.flow { background: var(--color-teal-deep); color: var(--color-white); text-align: center; padding: var(--space-6) var(--space-2); }
-.flow h2 { font-size: 28px; margin-bottom: var(--space-2); }
-.flow p { max-width: 560px; margin: 0 auto var(--space-3); color: #E6F2F5; }
 
 /* ============================================
    Contato / Fechamento
