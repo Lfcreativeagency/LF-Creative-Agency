@@ -1,2 +1,5 @@
 .env
 .DS_Store
+
+# Modelo base de landing page (uso interno, não publicar)
+_modelo-base/
