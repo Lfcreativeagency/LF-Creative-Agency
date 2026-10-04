@@ -185,6 +185,7 @@ h1, h2, h3 {
   margin: 0 auto var(--space-2);
 }
 .hero p {
+  text-wrap: balance;
   font-size: 18px;
   color: var(--color-text-muted);
   max-width: 560px;
@@ -221,7 +222,7 @@ h1, h2, h3 {
   border-radius: 8px;
   margin-bottom: var(--space-4);
 }
-.prova h2 { font-size: 26px; margin-bottom: var(--space-3); color: var(--color-white); }
+.prova h2 { font-size: 26px; margin-bottom: var(--space-3); color: var(--color-white); text-wrap: balance; }
 .prova ul { list-style: none; }
 .prova li {
   padding: var(--space-2) 0;
@@ -302,7 +303,6 @@ h1, h2, h3 {
   padding: var(--space-3) var(--space-2);
   font-size: 13px;
 }
-.site-footer a { color: #AAA; text-decoration: none; }
 
 /* ============================================
    Responsivo — mobile-first
