@@ -238,9 +238,21 @@ h1, h2, h3 {
   letter-spacing: .02em;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-2) 0;
+  /* O separador vive no ::before de cada nome; o recorte esconde o que cairia no início da linha */
+  margin-left: -32px;
+  clip-path: inset(0 0 0 32px);
 }
-.prova .brands span.sep { color: var(--color-cyan); }
+.prova .brands span.sep { display: none; }
+.prova .brands span:not(.sep) { position: relative; padding-left: 32px; }
+.prova .brands span:not(.sep)::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  width: 32px;
+  text-align: center;
+  color: var(--color-cyan);
+}
 
 /* ============================================
    Como funciona
