@@ -80,9 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ligar) video.play().catch(() => {}); else video.pause();
   };
 
-  // Cena com várias imagens (produção): elas se revezam sozinhas, só enquanto a cena está ativa.
-  // Cada quadro fica 2 s (ou data-dur); quadro com data-video toca o vídeo nesse intervalo.
-  // A cada quadro entra mais uma palavra no painel; quando o ciclo recomeça, a lista também.
+  // Cena com vários quadros (produção): eles se revezam sozinhos, só enquanto a cena está ativa.
+  // Cada quadro fica 3,5 s (ou data-dur); a passagem é um giro de câmera, com desfoque de movimento.
+  // Quadro com data-video toca o vídeo nesse intervalo. A cada quadro entra mais uma palavra no painel.
   const giros = new Map();
   const gira = (cena, ligar) => {
     const quadros = [...cena.querySelectorAll('img.quadro')];
@@ -92,27 +92,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!ligar) return;
     quadros.forEach((q) => { q.loading = 'eager'; });
     const palavras = [...cena.querySelectorAll('.cena-palavras li')];
-    let k = 0;
+    let k = 0, anterior = -1;
     const passo = () => {
-      quadros.forEach((q, m) => q.classList.toggle('on', m === k));
-      palavras.forEach((p, m) => { p.classList.toggle('on', m <= k); p.classList.toggle('nova', m === k); });
       const q = quadros[k];
-      let video = null;
-      const espera = (Number(q.dataset.dur) || 2) * 1000;   // 2 s por quadro, imagem ou vídeo
-      if (q.dataset.video && !economia) {
-        video = q.videoDoQuadro;
-        if (!video) {
-          video = document.createElement('video');
-          Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: q.dataset.video });
-          video.className = 'quadro-video'; video.setAttribute('aria-hidden', 'true');
-          q.after(video);
-          q.videoDoQuadro = video;
-        }
-        video.currentTime = 0;
-        video.play().catch(() => {});
+      if (q.dataset.video && !economia && !q.videoDoQuadro) {
+        const video = document.createElement('video');
+        Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: q.dataset.video });
+        video.className = 'quadro-video'; video.setAttribute('aria-hidden', 'true');
+        q.after(video);
+        q.videoDoQuadro = video;
       }
-      cena.querySelectorAll('.quadro-video').forEach((v) => { v.classList.toggle('on', v === video); if (v !== video) v.pause(); });
-      giros.set(cena, setTimeout(() => { k = (k + 1) % quadros.length; passo(); }, espera));
+      quadros.forEach((el, m) => {
+        [el, el.videoDoQuadro].forEach((alvo) => {
+          if (!alvo) return;
+          alvo.classList.toggle('on', m === k);
+          alvo.classList.toggle('saiu', m === anterior);
+          alvo.classList.toggle('primeiro', m === k && anterior === -1);
+        });
+        if (el.videoDoQuadro && m !== k && m !== anterior) el.videoDoQuadro.pause();
+      });
+      if (q.videoDoQuadro) { q.videoDoQuadro.currentTime = 0; q.videoDoQuadro.play().catch(() => {}); }
+      palavras.forEach((p, m) => { p.classList.toggle('on', m <= k); p.classList.toggle('nova', m === k); });
+      if (anterior !== -1) giroDeCamera(false);
+      const espera = (Number(q.dataset.dur) || 3.5) * 1000;
+      giros.set(cena, setTimeout(() => { anterior = k; k = (k + 1) % quadros.length; passo(); }, espera));
     };
     passo();
   };
@@ -123,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // rola para a primeira etapa, o filme segue sozinho até o fechamento. Rolar, tocar ou usar o teclado
   // devolve o controle para a pessoa. Passar o mouse num painel segura a cena para dar tempo de ler.
   let auto = false, manual = false, pausado = false, sobre = false, relogioAuto = 0, autoDesde = 0;
-  const duracao = (cena) => { const q = cena.querySelectorAll('img.quadro').length; return q > 1 ? q * 2000 : 5000; };
+  const duracao = (cena) => { const q = cena.querySelectorAll('img.quadro').length; return q > 1 ? q * 3500 : 5000; };
   const controle = document.createElement('button');
   controle.type = 'button'; controle.className = 'auto-ctl'; controle.hidden = true;
   palco.appendChild(controle);
