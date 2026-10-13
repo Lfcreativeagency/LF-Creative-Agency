@@ -473,6 +473,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .etapas { grid-template-columns: repeat(3, 1fr); column-gap: var(--e-4); }
   .etapas li { border-bottom: 0 !important; padding: var(--e-3) 0 0; }
   .planos { grid-template-columns: 1fr 1fr; }
+  .plano:nth-child(3) { grid-column: 1 / -1; }
   .plano { padding: var(--e-4); }
   .pares { grid-template-columns: 1fr 1fr; }
   .rodape .container { grid-template-columns: 1fr auto; align-items: end; }
@@ -487,9 +488,12 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .nao-faz { grid-template-columns: 5fr 7fr; column-gap: var(--e-5); }
   .duvidas-topo { position: sticky; top: 120px; }
   .duvidas summary { font-size: 1.25rem; padding: 28px 0; }
-  .planos { max-width: 62rem; gap: var(--e-3); }
+  .planos { grid-template-columns: repeat(3, 1fr); max-width: 78rem; gap: var(--e-3); }
+  .plano:nth-child(3) { grid-column: auto; }
+  .plano { padding: var(--e-4) var(--e-3); }
   .plano-destaque { --py: 5deg; }
-  .plano:not(.plano-destaque) { --py: -5deg; }
+  .plano:nth-child(2) { --py: 0deg; }
+  .plano:nth-child(3) { --py: -5deg; }
   .recebe-grade { grid-template-columns: 6fr 5fr; column-gap: var(--e-6); align-items: start; margin-top: 0; }
   .recebe-atual { display: none; }
   .recebe-fone { order: 0; position: sticky; top: calc(50vh - 300px); --fone-l: 262px; padding: var(--e-4) 0; }

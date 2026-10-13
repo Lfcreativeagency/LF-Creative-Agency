@@ -1,12 +1,12 @@
 // LF Flow — página de confirmação
 // O Mercado Pago devolve o cliente para cá depois do pagamento (endereço de retorno configurado em cada plano:
-// .../flow/obrigado/?plano=flow ou ?plano=plus). Aqui a compra é marcada no pixel "LP FLOW", uma vez por
+// .../flow/obrigado/?plano=flow, ?plano=plus ou ?plano=video). Aqui a compra é marcada no pixel "LP FLOW", uma vez por
 // navegador e só para quem aceitou os cookies na página do Flow.
 // Limite: quem abrir este endereço direto também conta. A confirmação segura é a do Mercado Pago (aviso de
 // pagamento enviado ao n8n e repassado ao Meta pela API de conversões), que fica na frente de automações.
 
 document.addEventListener('DOMContentLoaded', () => {
-  const planos = { flow: ['LF Flow', 697], plus: ['LF Flow Design', 1297] };
+  const planos = { flow: ['LF Flow', 697], plus: ['LF Flow Design', 1297], video: ['LF Flow Vídeo', 2980] };
   const plano = planos[new URLSearchParams(location.search).get('plano')];
   const le = (c) => { try { return localStorage.getItem(c); } catch { return null; } };
   const grava = (c, v) => { try { localStorage.setItem(c, v); } catch { /* segue sem lembrar */ } };
