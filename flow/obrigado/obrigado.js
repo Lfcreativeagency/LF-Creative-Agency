@@ -6,7 +6,7 @@
 // pagamento enviado ao n8n e repassado ao Meta pela API de conversões), que fica na frente de automações.
 
 document.addEventListener('DOMContentLoaded', () => {
-  const planos = { flow: ['LF Flow', 697], plus: ['LF Flow Design', 1297], video: ['LF Flow Vídeo', 2980] };
+  const planos = { flow: ['LF Flow', 680], plus: ['LF Flow Design', 1280], video: ['LF Flow Vídeo', 2980] };
   const plano = planos[new URLSearchParams(location.search).get('plano')];
   const le = (c) => { try { return localStorage.getItem(c); } catch { return null; } };
   const grava = (c, v) => { try { localStorage.setItem(c, v); } catch { /* segue sem lembrar */ } };
