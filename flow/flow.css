@@ -244,7 +244,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .rodape { background: var(--fundo); color: var(--tinta-2); border-top: 1px solid var(--linha); padding: var(--e-5) 0 var(--e-6); }
 .rodape .container { display: grid; gap: var(--e-4); }
 .rodape-logo { width: 150px; height: auto; filter: invert(1); }
-.rodape-dados { display: grid; gap: var(--e-1); justify-items: start; }
+.rodape-dados { display: grid; gap: 0; justify-items: start; }
+.rodape-dados p { margin-bottom: var(--e-1); }
 .rodape-link { color: var(--tinta-3); font-weight: 400; font-size: .9375rem; text-decoration-thickness: 1px; text-underline-offset: 4px; min-height: 44px; display: inline-flex; align-items: center; }
 .rodape-cookies { background: none; border: 0; padding: 0; cursor: pointer; color: var(--tinta-3); font-size: .9375rem; text-decoration: underline; text-underline-offset: 4px; min-height: 44px; }
 
@@ -266,15 +267,17 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .passos a:focus-visible { outline-color: var(--lt-forte); }
 .passos .cursor { position: absolute; top: -5px; left: calc(var(--p, 0) * 100%); width: 2px; height: 11px; background: var(--cor-ciano); pointer-events: none; }
 
-/* ---------- Aviso de cookies ---------- */
+/* ---------- Aviso de cookies: faixa fina no pé, para não cobrir o botão da abertura ---------- */
 .cookies {
-  position: fixed; z-index: 90; right: var(--e-3); bottom: var(--e-3); width: min(24rem, calc(100% - 2 * var(--e-3)));
-  display: grid; gap: var(--e-2); padding: var(--e-3);
-  background: var(--cor-gelo); color: #3D3D3D; border: 1px solid var(--cor-preto); font-size: .9375rem; line-height: 1.45;
+  position: fixed; z-index: 90; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center; gap: var(--e-2) var(--e-3); padding: 10px var(--e-3);
+  background: var(--cor-gelo); color: #3D3D3D; border-top: 1px solid var(--cor-preto); font-size: .875rem; line-height: 1.35;
 }
-.cookies-acoes { display: flex; gap: var(--e-1); }
-.cookies .btn { flex: 1; justify-content: center; background: var(--cor-preto); color: var(--cor-gelo); border-color: var(--cor-preto); }
-.cookies button:focus-visible { outline-color: var(--cor-preto); }
+.cookies p { max-width: 44rem; }
+.cookies a { color: var(--cor-preto); font-weight: 500; text-decoration-thickness: 1px; text-underline-offset: 3px; white-space: nowrap; }
+.cookies-acoes { display: flex; gap: var(--e-1); flex: none; }
+.cookies .btn { justify-content: center; background: var(--cor-preto); color: var(--cor-gelo); border-color: var(--cor-preto); }
+.cookies button:focus-visible, .cookies a:focus-visible { outline: 2px solid var(--cor-preto); outline-offset: 2px; }
 
 /* ---------- Páginas de apoio: termos de assinatura e confirmação ---------- */
 .pagina-texto { min-height: 0; align-items: start; padding: 136px 0 var(--e-6); }
@@ -335,7 +338,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .passos a[aria-current="true"] { border-bottom-color: var(--lt-forte); }
   .passos .cursor { top: auto; bottom: -4px; }
   .dia { flex-direction: column; gap: 2px; padding: 8px 10px; }
-  .cookies { left: 12px; right: 12px; bottom: 40px; width: auto; }
+  .cookies { padding: 8px 12px; gap: 10px; font-size: .8125rem; }
+  .cookies .btn { padding: 10px 12px; font-size: .875rem; }
   .passos { --lt-fraco: rgba(244, 244, 242, .5); }
   [data-tom="claro"] .passos { --lt-fraco: rgba(10, 10, 10, .45); }
   h1 { font-size: clamp(1.75rem, 8.6vw, 2.5rem); }
