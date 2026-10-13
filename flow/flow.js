@@ -1,5 +1,5 @@
 // LF Flow — landing page
-// O mês de exemplo da abertura, o tracking dos botões, o aviso de cookies (o pixel só carrega com aceite),
+// O mês de exemplo da abertura (celular em 3D com os conteúdos em órbita), o tracking dos botões, o aviso de cookies (o pixel só carrega com aceite),
 // a linha do tempo e a entrada das cenas.
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -37,11 +37,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const lista = Object.assign(document.createElement('ul'), { className: 'peca-linhas' });
     item.linhas.forEach(([rotulo, texto]) => {
       const li = document.createElement('li');
-      li.append(Object.assign(document.createElement('b'), { textContent: `${rotulo}: ` }), texto);
+      li.append(Object.assign(document.createElement('b'), { textContent: rotulo }), texto);
       lista.append(li);
     });
     peca.append(tipo, titulo, lista);
     grade.querySelectorAll('.dia').forEach((b, n) => b.setAttribute('aria-pressed', String(n === i)));
+  };
+
+  // ---- A órbita ----
+  // Os 12 cartões giram em volta do celular. O dia escolhido vem para a frente e o roteiro dele aparece na tela.
+  // Sozinha, a órbita avança um dia a cada 3,2 s; quando a pessoa escolhe um dia, ela espera 15 s antes de voltar a andar.
+  let dia = 0, escolhe = (i) => { dia = i; mostra(i); };
+  const orbita = () => {
+    const cena = document.getElementById('orbita');
+    const fone = cena.querySelector('.fone');
+    const cartoes = [...grade.querySelectorAll('.dia')];
+    const n = cartoes.length, inclina = 72 * Math.PI / 180;
+    const parado = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let pos = 0, visivel = true, pausaAte = 0, t0 = performance.now(), ultimoPasso = t0, raio = 150;
+    const mede = () => { raio = Math.min(cena.clientWidth * (cena.clientWidth < 420 ? .47 : .56), cena.clientHeight * .5); cena.style.setProperty('--raio', `${raio.toFixed(0)}px`); };
+    const sai = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+    const desenha = (agora) => {
+      const t = (agora - t0) / 1000;
+      const entrada = parado ? 1 : sai((t - .15) / 1.3);
+      let d = dia - pos; d -= Math.round(d / n) * n;            // caminho mais curto até o dia escolhido
+      pos += parado ? d : d * .07;
+      cartoes.forEach((c, i) => {
+        const a = Math.PI / 2 + (i - pos) * (2 * Math.PI / n);
+        const x = Math.cos(a) * raio * entrada, p = Math.sin(a) * raio * entrada;
+        c.style.transform = `translate3d(${x.toFixed(1)}px, ${(p * Math.cos(inclina)).toFixed(1)}px, ${(p * Math.sin(inclina)).toFixed(1)}px)`;
+        c.style.opacity = (entrada * (.3 + .7 * (Math.sin(a) + 1) / 2)).toFixed(2);
+      });
+      fone.style.setProperty('--fy', `${(-16 + (parado ? 0 : Math.sin(t * .45) * 7) + (1 - entrada) * 70).toFixed(2)}deg`);
+      fone.style.setProperty('--sobe', `${((1 - entrada) * 90).toFixed(1)}px`);
+      fone.style.opacity = Math.min(1, entrada * 1.6).toFixed(2);
+    };
+    const laco = (agora) => {
+      if (visivel && !document.hidden) {
+        if (!parado && agora > pausaAte && agora - ultimoPasso > 3200) { ultimoPasso = agora; dia = (dia + 1) % n; mostra(dia); }
+        desenha(agora);
+      }
+      if (!parado) requestAnimationFrame(laco);
+    };
+    escolhe = (i, daPessoa) => {
+      dia = i; mostra(i);
+      if (daPessoa) pausaAte = performance.now() + 15000;
+      if (parado) desenha(performance.now());
+    };
+    cena.addEventListener('pointerenter', () => { pausaAte = Math.max(pausaAte, performance.now() + 4000); });
+    cena.addEventListener('focusin', () => { pausaAte = performance.now() + 15000; });
+    window.addEventListener('resize', () => { mede(); if (parado) desenha(performance.now()); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(cena);
+    mede(); mostra(0);
+    if (parado) desenha(performance.now()); else requestAnimationFrame(laco);
   };
 
   if (grade && peca) {
@@ -53,10 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.assign(document.createElement('span'), { className: 'dia-numero', textContent: String(i + 1) }),
         Object.assign(document.createElement('span'), { textContent: item.tipo }),
       );
-      botao.addEventListener('click', () => mostra(i));
+      botao.addEventListener('click', () => escolhe(i, true));
       grade.append(botao);
     });
-    mostra(0);
+    orbita();
   }
 
   // ---- Aviso de cookies e Meta Pixel ----
@@ -171,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
   document.querySelectorAll('.revela, .entra').forEach((el) => observador.observe(el));
 
-  // Painel do mês: inclina de leve acompanhando o mouse, só em telas com cursor
+  // A órbita inclina de leve acompanhando o mouse, só em telas com cursor
   const palco = document.getElementById('abertura');
   if (palco && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     let q = 0;

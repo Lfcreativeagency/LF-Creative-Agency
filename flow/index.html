@@ -29,7 +29,7 @@
 <link rel="preload" href="assets/fonts/lemonmilk-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/urbanist-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-<link rel="stylesheet" href="flow.css?v=2026-10-13f">
+<link rel="stylesheet" href="flow.css?v=2026-10-13h">
 <!-- O Meta Pixel "LP FLOW" (2266283787124186) é carregado pelo flow.js, só depois do aceite no aviso de cookies. -->
 </head>
 <body>
@@ -59,14 +59,29 @@
     </div>
 
     <!-- O mês de exemplo: o que o cliente recebe, mostrado de verdade -->
-    <div class="mes-cena">
-      <div class="painel mes entra" role="group" aria-labelledby="mes-titulo">
-        <p class="rotulo" id="mes-titulo">Um mês de exemplo: confeitaria de bairro</p>
-        <p class="mes-dica" aria-hidden="true">Toque em um dia para ver o que chega.</p>
-        <div class="mes-dias rotulo" aria-hidden="true"><span>Seg</span><span>Qua</span><span>Sex</span></div>
+    <div class="orbita-cena">
+      <p class="rotulo" id="mes-titulo">Um mês de exemplo: confeitaria de bairro</p>
+      <div class="orbita" id="orbita" role="group" aria-labelledby="mes-titulo">
+        <div class="anel" aria-hidden="true"></div>
+        <div class="fone">
+          <div class="fone-corpo" aria-hidden="true"></div>
+          <div class="fone-corpo" aria-hidden="true"></div>
+          <div class="fone-tela">
+            <div class="mes-peca" id="mes-peca">
+              <p class="peca-tipo">Dia 1, vídeo</p>
+              <p class="peca-titulo">O bolo que mais sai, e por quê</p>
+              <ul class="peca-linhas">
+                <li><b>Primeira frase</b>Esse é o bolo que acaba antes do meio-dia.</li>
+                <li><b>Fale</b>Conte qual é, de onde veio a receita e para que ocasião o pessoal pede.</li>
+                <li><b>Mostre</b>O bolo sendo cortado, de perto.</li>
+              </ul>
+            </div>
+            <p class="fone-rec" aria-hidden="true"><b></b>Pronto para gravar</p>
+          </div>
+        </div>
         <div class="mes-grade" id="mes-grade" role="group" aria-label="As 12 ideias do mês. Selecione uma para ver."></div>
-        <div class="mes-peca" id="mes-peca" aria-live="polite"></div>
       </div>
+      <p class="mes-dica" aria-hidden="true">Toque em um dia para ver o que chega.</p>
     </div>
   </div>
 </section>
@@ -283,6 +298,6 @@
   </div>
 </div>
 
-<script src="flow.js?v=2026-10-13e" defer></script>
+<script src="flow.js?v=2026-10-13h" defer></script>
 </body>
 </html>
