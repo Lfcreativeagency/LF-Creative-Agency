@@ -280,13 +280,37 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 
 /* 6, 7 e 8. Garantia, limites e indicação */
 .pares { display: grid; gap: var(--e-5); }
-.pares h2, #indicacao h2 { font-size: clamp(1.375rem, 1rem + 1.4vw, 2.125rem); }
+#indicacao h2 { font-size: clamp(1.375rem, 1rem + 1.4vw, 2.125rem); }
 .pares h2 + p { margin-top: var(--e-3); }
 .pares p + p { margin-top: var(--e-2); }
 .pares p, .indicacao-texto { max-width: 34rem; }
 .indicacao-texto { font-size: 1.125rem; color: var(--tinta); }
 
+/* Garantia: um 7 em relevo, com espessura de verdade (camadas empilhadas em profundidade), que gira com a rolagem */
+.garantia-grade { display: grid; gap: var(--e-4); align-items: center; }
+.sete { display: flex; align-items: flex-end; gap: var(--e-2); perspective: 900px; justify-self: start; }
+.sete-n { position: relative; display: block; font-family: var(--fonte-titulo); font-weight: 700; font-size: clamp(11rem, 30vw, 21rem); line-height: .8; color: var(--cor-preto); transform-style: preserve-3d; transform: rotateY(var(--giro, -22deg)) rotateX(6deg); }
+.sete-n i { position: absolute; left: 0; top: 0; font-style: normal; color: #9CA3AA; }
+.sete-d { padding-bottom: .5em; font-family: var(--fonte-titulo); font-weight: 500; font-size: clamp(1.25rem, 1rem + 1.4vw, 2.25rem); text-transform: uppercase; color: var(--tinta); background: linear-gradient(var(--cor-ciano), var(--cor-ciano)) 0 100% / 100% .11em no-repeat; }
+.garantia h2 + .garantia-texto { margin-top: var(--e-3); }
+.garantia-texto { max-width: 30rem; font-size: 1.25rem; line-height: 1.5; color: var(--tinta); }
+.nao-faz { display: grid; gap: var(--e-3); margin-top: var(--e-5); padding-top: var(--e-4); border-top: 1px solid var(--linha); }
+.nao-faz h2 { font-size: 1.375rem; font-weight: 700; }
+.nao-faz h2 + div { margin-top: 0; }
+.nao-faz p { max-width: 38rem; font-size: 1rem; }
+.nao-faz p + p { margin-top: var(--e-1); }
+
 /* 9. Dúvidas */
+#duvidas { overflow: visible; overflow-x: clip; }
+.duvidas-topo p { margin-top: var(--e-3); max-width: 20rem; }
+.duvidas summary:hover { color: var(--cor-preto); }
+.duvidas details { transition: border-color 250ms ease; }
+.duvidas details:hover, .duvidas details[open] { border-top-color: var(--tinta); }
+@supports (interpolate-size: allow-keywords) {
+  .duvidas { interpolate-size: allow-keywords; }
+  .duvidas details::details-content { block-size: 0; overflow: hidden; transition: block-size 380ms var(--curva), content-visibility 380ms allow-discrete; }
+  .duvidas details[open]::details-content { block-size: auto; }
+}
 .duvidas details { border-top: 1px solid var(--linha); }
 .duvidas details:last-child { border-bottom: 1px solid var(--linha); }
 .duvidas summary { display: flex; justify-content: space-between; align-items: center; gap: var(--e-3); padding: var(--e-3) 0; cursor: pointer; list-style: none; color: var(--tinta); font-weight: 500; font-size: 1.125rem; line-height: 1.35; }
@@ -430,6 +454,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   :root { --margem: 84px; }
   .abertura-grade { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: center; gap: var(--e-5); }
   .duas { grid-template-columns: 5fr 7fr; column-gap: var(--e-5); align-items: start; }
+  .garantia-grade { grid-template-columns: 5fr 7fr; column-gap: var(--e-5); }
+  .nao-faz { grid-template-columns: 5fr 7fr; column-gap: var(--e-5); }
+  .duvidas-topo { position: sticky; top: 120px; }
+  .duvidas summary { font-size: 1.25rem; padding: 28px 0; }
   .planos { max-width: 62rem; gap: var(--e-3); }
   .plano-destaque { --py: 5deg; }
   .plano:not(.plano-destaque) { --py: -5deg; }

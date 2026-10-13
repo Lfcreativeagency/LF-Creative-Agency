@@ -273,6 +273,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
   document.querySelectorAll('.revela, .entra').forEach((el) => observador.observe(el));
 
+  // Garantia: o 7 ganha espessura (camadas empilhadas para trás) e gira conforme a seção atravessa a tela
+  const sete = document.querySelector('#sete .sete-n');
+  if (sete) {
+    for (let i = 1; i <= 16; i += 1) {
+      const camada = Object.assign(document.createElement('i'), { textContent: '7' });
+      camada.style.transform = `translateZ(${-i * 2.5}px)`;
+      sete.append(camada);
+    }
+    const frente = Object.assign(document.createElement('i'), { textContent: '7' });   // a face da frente volta a ser preta
+    frente.style.cssText = 'color: var(--cor-preto); transform: translateZ(.5px)';
+    sete.append(frente);
+    const gira = () => {
+      const r = sete.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (window.innerHeight - r.top) / (window.innerHeight + r.height)));   // 0 quando entra por baixo, 1 quando sai por cima
+      sete.style.setProperty('--giro', `${(-34 + p * 62).toFixed(1)}deg`);
+    };
+    window.addEventListener('scroll', () => requestAnimationFrame(gira), { passive: true });
+    gira();
+  }
+
   // Planos: cada cartão inclina na direção do mouse, só em telas com cursor
   if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     document.querySelectorAll('.plano').forEach((cartao) => {
