@@ -95,13 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let k = 0, anterior = -1;
     const passo = () => {
       const q = quadros[k];
-      if (q.dataset.video && !economia && !q.videoDoQuadro) {
+      [q, quadros[(k + 1) % quadros.length]].forEach((el) => {   // o atual e o seguinte, já carregando
+        if (!el.dataset.video || economia || el.videoDoQuadro) return;
         const video = document.createElement('video');
-        Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: q.dataset.video });
+        Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: el.dataset.video });
         video.className = 'quadro-video'; video.setAttribute('aria-hidden', 'true');
-        q.after(video);
-        q.videoDoQuadro = video;
-      }
+        el.after(video);
+        el.videoDoQuadro = video;
+      });
       quadros.forEach((el, m) => {
         [el, el.videoDoQuadro].forEach((alvo) => {
           if (!alvo) return;
@@ -126,7 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // rola para a primeira etapa, o filme segue sozinho até o fechamento. Rolar, tocar ou usar o teclado
   // devolve o controle para a pessoa. Passar o mouse num painel segura a cena para dar tempo de ler.
   let auto = false, manual = false, pausado = false, sobre = false, relogioAuto = 0, autoDesde = 0;
-  const duracao = (cena) => { const q = cena.querySelectorAll('img.quadro').length; return q > 1 ? q * 3500 : 5000; };
+  const duracao = (cena) => {   // produção: 3,5 s por quadro; demais: tempo de leitura do texto, entre 4,5 e 8 s
+    const q = cena.querySelectorAll('img.quadro').length;
+    if (q > 1) return q * 3500;
+    const letras = (cena.querySelector('.cena-painel') || cena).textContent.replace(/\s+/g, ' ').length;
+    return Math.min(7000, Math.max(4500, 2400 + letras * 26));
+  };
   const controle = document.createElement('button');
   controle.type = 'button'; controle.className = 'auto-ctl'; controle.hidden = true;
   palco.appendChild(controle);
@@ -190,6 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // só a abertura tem fundo claro; depois do filme vem o fechamento, que é escuro
     const passou = filme.getBoundingClientRect().bottom < 80;
     raiz.dataset.tom = passou ? 'escuro' : (cenas[i].dataset.tom || 'escuro');
+    const noFim = filme.getBoundingClientRect().bottom < window.innerHeight * 0.6;
+    raiz.dataset.conversa = (i === 0 || noFim) ? 'off' : 'on';   // abertura e fechamento já têm os próprios botões
     hud.classList.toggle('fora', passou);   // pausa o piscar do REC fora da tela
     const quadros = Math.round(p * n * 10 * 24);   // cada cena vale 10 s a 24 quadros
     const dois = (v) => String(v).padStart(2, '0');

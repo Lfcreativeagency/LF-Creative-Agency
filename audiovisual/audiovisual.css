@@ -93,7 +93,7 @@
   --vidro-texto: var(--cor-gelo);
   --vidro-rotulo: rgba(244, 244, 242, .86);
   position: absolute; left: 84px; bottom: 84px;
-  width: min(30rem, calc(100% - 168px));
+  width: min(var(--painel-l, 30rem), calc(100% - 168px));
   gap: var(--e-2); padding: var(--e-3) var(--e-4) var(--e-3) var(--e-3);
   pointer-events: auto;
   color: var(--vidro-texto);
@@ -139,11 +139,16 @@
   }
   .com-rolagem .cena[data-lado="baixo"].ativa .cena-painel { transform: rotateX(calc(5deg + var(--gy, 0deg))) rotateY(var(--gx, 0deg)); }
   .com-rolagem .cena[data-lado="baixo"] .cena-titulo { grid-row: 1 / span 2; }
+  @media (min-width: 1180px) { .com-rolagem .cena[data-lado="baixo"] .cena-painel { right: 268px; bottom: 56px; } }
   .com-rolagem .cena[data-lado="baixo"] .cena-painel { grid-template-columns: auto minmax(0, 1fr) auto; }
   .com-rolagem .cena[data-lado="baixo"] .cena-link { grid-column: 3; grid-row: 1 / span 2; align-self: center; margin-right: var(--e-4); white-space: nowrap; }
   .com-rolagem .cena[data-lado="baixo"] h2 { font-size: clamp(1.5rem, 1rem + 1.3vw, 2.25rem); white-space: nowrap; }
   .com-rolagem .cena[data-lado="baixo"] .cena-palavras { min-height: 34px; flex-wrap: nowrap; }
+  @media (min-width: 1180px) { .com-rolagem .cena[data-lado="baixo"] h2 { font-size: 1.75rem; } .com-rolagem .cena[data-lado="baixo"] .cena-link { margin-right: var(--e-2); } }
 }
+
+/* Título em uma linha, para o painel ficar mais baixo (reunião: não cobre as mãos) */
+@media (min-width: 768px) { .com-rolagem .cena[data-compacto] .cena-painel h2 { font-size: clamp(1.5rem, 1rem + 1.5vw, 2.375rem); white-space: nowrap; } }
 
 /* Vidro claro: opção do seletor de prévia */
 [data-painel="claro"].com-rolagem .cena-painel {
@@ -247,9 +252,11 @@
 .fim::before {
   content: ""; position: absolute; inset: -48px;
   background: url("assets/img/cena-set-1100.webp") 50% 50% / cover;
-  filter: blur(26px) brightness(.26) saturate(.7);
+  filter: blur(44px) brightness(.34) saturate(.6);
 }
+.fim::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 85% at 22% 28%, rgba(10, 10, 10, .2), rgba(10, 10, 10, .88) 78%); }
 .fim .container { position: relative; z-index: 5; }
+.fim .hud { z-index: 4; }
 .fim h2 { color: var(--cor-gelo); font-size: clamp(2rem, 1rem + 4.4vw, 4.75rem); line-height: 1.02; }
 .fim-apoio { max-width: 32rem; margin: var(--e-3) 0 var(--e-4); font-size: 1.125rem; }
 .fim .btn { background: var(--cor-gelo); color: var(--cor-preto); }
@@ -295,10 +302,13 @@ body { background: var(--cor-preto); }
 .cabecalho .btn::after { content: none; }
 .com-rolagem .cabecalho .btn {
   position: fixed; right: 44px; bottom: 40px; z-index: 61;
+  transition: opacity 350ms ease, visibility 0s;
   background: rgba(12, 14, 16, .46); color: var(--cor-gelo);
   border: 1px solid rgba(244, 244, 242, .34);
   -webkit-backdrop-filter: blur(18px) saturate(1.25); backdrop-filter: blur(18px) saturate(1.25);
 }
+
+[data-conversa="off"].com-rolagem .cabecalho .btn { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 350ms ease, visibility 0s 350ms; }
 
 /* ---------- Marca de gravação: REC e timecode no topo, entre o logo e o botão ---------- */
 .hud { position: absolute; inset: 0; z-index: 4; pointer-events: none; color: var(--cor-gelo); font: 500 .75rem/1 ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .12em; }
@@ -336,7 +346,7 @@ body { background: var(--cor-preto); }
    o painel ocupa a largura, sem inclinação ---------- */
 @media (max-width: 767px) {
   .com-rolagem .cena-painel {
-    left: 12px; right: 12px; bottom: 100px; width: auto;   /* acima do botão de conversa e da linha do tempo */
+    left: 12px; right: 12px; bottom: 44px; width: auto;   /* o ícone de conversa fica no canto inferior direito do painel */
     padding: var(--e-3) var(--e-3) var(--e-2);
     transform: translateY(18px);
   }
@@ -344,7 +354,8 @@ body { background: var(--cor-preto); }
   .com-rolagem .cena-abertura .cena-titulo { top: 21%; }
   .com-rolagem .cena-abertura .cena-painel { padding-top: var(--e-4); }
   .com-rolagem .passos { left: 12px; right: 12px; bottom: 8px; }
-  .com-rolagem .cabecalho .btn { right: 12px; bottom: 44px; }   /* no celular a linha do tempo fica só com os traços */
+  .com-rolagem .cabecalho .btn { right: 24px; bottom: 54px; width: 40px; min-height: 40px; padding: 0; gap: 0; justify-content: center; font-size: 0; }
+  .com-rolagem .cena-palavras { min-height: 34px; }   /* no celular a linha do tempo fica só com os traços */
   .passos button { height: 28px; padding: 0; font-size: 0; border-top: 0; border-bottom: 2px solid rgba(244, 244, 242, .38); }
   .passos button[aria-current="true"] { border-bottom-color: var(--cor-gelo); }
   [data-tom="claro"] .passos button { border-bottom-color: rgba(10, 10, 10, .35); }
