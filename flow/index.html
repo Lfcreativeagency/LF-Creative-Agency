@@ -29,7 +29,7 @@
 <link rel="preload" href="assets/fonts/lemonmilk-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/urbanist-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-<link rel="stylesheet" href="flow.css?v=2026-10-13j">
+<link rel="stylesheet" href="flow.css?v=2026-10-13k">
 <!-- O Meta Pixel "LP FLOW" (2266283787124186) é carregado pelo flow.js, só depois do aceite no aviso de cookies. -->
 </head>
 <body>
@@ -107,32 +107,80 @@
   </div>
 </section>
 
-<!-- 3. O QUE VOCÊ RECEBE -->
-<section class="cena cena-escura" id="recebe" data-nome="O que chega">
-  <div class="container duas">
+<!-- 3. O QUE VOCÊ RECEBE: a lista à esquerda e um celular fixo à direita, que troca de tela a cada item -->
+<section class="cena cena-escura recebe" id="recebe" data-nome="O que chega">
+  <div class="container">
     <h2 class="revela">Todo mês, o seu plano de conteúdo chega <em>pronto</em></h2>
-    <dl class="entregas entra">
-      <div>
-        <dt>Um guia do seu negócio</dt>
-        <dd>No primeiro mês a gente define com você quem é o seu cliente, o que te diferencia e como a sua marca fala. Tudo o que vem depois sai daqui.</dd>
+    <div class="recebe-grade">
+      <dl class="entregas" id="entregas">
+        <div>
+          <dt>Um guia do seu negócio</dt>
+          <dd>No primeiro mês a gente define com você quem é o seu cliente, o que te diferencia e como a sua marca fala. Tudo o que vem depois sai daqui.</dd>
+        </div>
+        <div>
+          <dt>12 ideias no calendário</dt>
+          <dd>Você sabe o que publicar em cada semana, sem decidir nada na hora.</dd>
+        </div>
+        <div>
+          <dt>8 roteiros de vídeo</dt>
+          <dd>Com a primeira frase, o que falar e o que mostrar. Feitos para gravar sozinho, no celular, em poucos minutos.</dd>
+        </div>
+        <div>
+          <dt>12 legendas prontas</dt>
+          <dd>É copiar, colar e publicar.</dd>
+        </div>
+        <div>
+          <dt>Ideias no WhatsApp</dt>
+          <dd>Apareceu uma novidade no meio do mês? Peça uma ideia e receba na hora.</dd>
+        </div>
+      </dl>
+      <!-- As telas são ilustração do que chega (exemplo de uma marca de moda); o conteúdo está no texto ao lado -->
+      <div class="recebe-fone" aria-hidden="true">
+        <div class="fone" id="fone-recebe">
+          <div class="fone-corpo"></div>
+          <div class="fone-corpo"></div>
+          <div class="fone-tela">
+            <div class="tela on">
+              <p class="tela-rot">Guia da marca</p>
+              <p class="tela-tit">Ateliê Lina</p>
+              <dl class="tela-guia">
+                <div><dt>Quem compra</dt><dd>Mulheres de 28 a 45 anos que querem roupa bem feita para usar muito.</dd></div>
+                <div><dt>O que diferencia</dt><dd>Linho e algodão, produção pequena, feita no Rio.</dd></div>
+                <div><dt>Como a marca fala</dt><dd>De perto, sem pressa, mostrando quem faz.</dd></div>
+              </dl>
+            </div>
+            <div class="tela">
+              <p class="tela-rot">Calendário do mês</p>
+              <p class="tela-tit">12 ideias</p>
+              <ol class="tela-cal"><li><b>1</b>Vídeo</li><li><b>2</b>Carrossel</li><li><b>3</b>Vídeo</li><li><b>4</b>Vídeo</li><li><b>5</b>Foto</li><li><b>6</b>Vídeo</li><li><b>7</b>Vídeo</li><li><b>8</b>Carrossel</li><li><b>9</b>Vídeo</li><li><b>10</b>Vídeo</li><li><b>11</b>Foto</li><li><b>12</b>Vídeo</li></ol>
+            </div>
+            <div class="tela">
+              <p class="tela-rot">Dia 7, roteiro de vídeo</p>
+              <p class="tela-tit">Por que essa peça custa o que custa</p>
+              <dl class="tela-guia">
+                <div><dt>Primeira frase</dt><dd>Vou te mostrar o que tem dentro desse preço.</dd></div>
+                <div><dt>Fale</dt><dd>Tecido, costura, acabamento e quem produz.</dd></div>
+                <div><dt>Mostre</dt><dd>Os detalhes de perto: costura, botão e etiqueta.</dd></div>
+              </dl>
+            </div>
+            <div class="tela">
+              <p class="tela-rot">Dia 7, legenda</p>
+              <p class="tela-leg">Uma camisa de linho leva três dias para ficar pronta. Corte, costura e acabamento passam por duas pessoas, aqui no Rio. É por isso que ela dura anos, e não uma estação.</p>
+              <p class="tela-leg">Quer ver de perto? O link está na bio.</p>
+              <p class="tela-botao">Copiar legenda</p>
+            </div>
+            <div class="tela">
+              <p class="tela-rot">WhatsApp</p>
+              <p class="tela-msg tela-msg-eu">Chegou um tecido novo hoje. O que eu posto?</p>
+              <p class="tela-msg">Grave 15 segundos abrindo o rolo.<br>Primeira frase: "Olha o que acabou de chegar no ateliê."</p>
+              <p class="tela-msg">Na legenda, conte que peça ele vai virar e peça palpite de cor.</p>
+            </div>
+          </div>
+        </div>
+        <p class="recebe-atual" id="recebe-atual"></p>
+        <p class="rotulo">Exemplo: uma marca de moda</p>
       </div>
-      <div>
-        <dt>12 ideias no calendário</dt>
-        <dd>Você sabe o que publicar em cada semana, sem decidir nada na hora.</dd>
-      </div>
-      <div>
-        <dt>8 roteiros de vídeo</dt>
-        <dd>Com a primeira frase, o que falar e o que mostrar. Feitos para gravar sozinho, no celular, em poucos minutos.</dd>
-      </div>
-      <div>
-        <dt>12 legendas prontas</dt>
-        <dd>É copiar, colar e publicar.</dd>
-      </div>
-      <div>
-        <dt>Ideias no WhatsApp</dt>
-        <dd>Apareceu uma novidade no meio do mês? Peça uma ideia e receba na hora.</dd>
-      </div>
-    </dl>
+    </div>
   </div>
 </section>
 
@@ -303,6 +351,6 @@
   </div>
 </div>
 
-<script src="flow.js?v=2026-10-13i" defer></script>
+<script src="flow.js?v=2026-10-13k" defer></script>
 </body>
 </html>

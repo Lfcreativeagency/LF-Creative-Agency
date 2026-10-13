@@ -132,6 +132,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
   }
 
+  // ---- O que chega: o celular troca de tela conforme o item da lista ----
+  // No computador, o item que está no meio da tela manda. No celular, a lista anda sozinha e o toque escolhe.
+  const entregas = document.getElementById('entregas');
+  const foneRecebe = document.getElementById('fone-recebe');
+  if (entregas && foneRecebe) {
+    const itens = [...entregas.children], telas = [...foneRecebe.querySelectorAll('.tela')];
+    const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const largo = window.matchMedia('(min-width: 1024px)');
+    const atual = document.getElementById('recebe-atual');
+    let passo = 0, pausa = 0, naTela = false;
+    const ativa = (i) => {
+      passo = i;
+      itens.forEach((el, n) => el.classList.toggle('on', n === i));
+      telas.forEach((el, n) => el.classList.toggle('on', n === i));
+      foneRecebe.style.setProperty('--fy', `${-12 + i * 6}deg`);
+      if (atual) atual.textContent = itens[i].querySelector('dt').textContent;
+    };
+    entregas.classList.add('passo-a-passo');
+    ativa(0);
+    itens.forEach((el, i) => el.addEventListener('click', () => { ativa(i); pausa = performance.now() + 12000; }));
+    if ('IntersectionObserver' in window) {
+      const meio = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && largo.matches) ativa(itens.indexOf(e.target)); }), { rootMargin: '-45% 0px -45% 0px' });
+      itens.forEach((el) => meio.observe(el));
+      new IntersectionObserver(([e]) => { naTela = e.isIntersecting; }, { threshold: .25 }).observe(entregas);
+    }
+    if (!semMovimento) setInterval(() => { if (!largo.matches && naTela && !document.hidden && performance.now() > pausa) ativa((passo + 1) % itens.length); }, 2800);
+  }
+
   // ---- Aviso de cookies e Meta Pixel ----
   // O pixel "LP FLOW" grava dados de quem visita, então só é carregado depois do aceite.
   // A escolha fica guardada; "Preferências de cookies", no rodapé, reabre o aviso.

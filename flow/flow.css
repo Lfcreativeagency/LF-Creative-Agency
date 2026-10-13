@@ -204,7 +204,31 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .linhas li:last-child { border-bottom: 1px solid var(--linha); }
 .fecho { margin-top: var(--e-4); max-width: 30rem; font-family: var(--fonte-titulo); font-weight: 500; font-size: 1.0625rem; line-height: 1.4; text-transform: uppercase; color: var(--tinta); }
 
-/* 3. O que você recebe */
+/* 3. O que você recebe: lista de um lado, celular do outro. O flow.js marca o item da vez (.on) e a tela dele. */
+.recebe { overflow: visible; overflow-x: clip; }
+.recebe-grade { display: grid; gap: var(--e-4); margin-top: var(--e-4); }
+.recebe-fone { order: -1; display: grid; justify-items: center; gap: var(--e-2); perspective: 1300px; --fone-l: 196px; }
+.recebe-fone .fone { position: relative; left: auto; top: auto; transform: rotateY(var(--fy, -12deg)) rotateX(2deg); transition: transform 900ms var(--curva); }
+.recebe-atual { font-family: var(--fonte-titulo); font-weight: 500; font-size: 1rem; text-transform: uppercase; color: var(--tinta); text-align: center; min-height: 1.3em; }
+.entregas.passo-a-passo > div { cursor: pointer; transition: opacity 400ms ease; }
+.entregas.passo-a-passo > div:not(.on) { opacity: .62; }
+.tela { position: absolute; inset: 0; padding: 15% 9% 9%; display: flex; flex-direction: column; opacity: 0; transform: translateY(4cqw); transition: opacity 350ms ease, transform 500ms var(--curva); }
+.tela.on { opacity: 1; transform: none; }
+.tela-rot { font-size: 3.8cqw; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-3); }
+.tela-tit { margin-top: 3cqw; padding-bottom: 5cqw; font-family: var(--fonte-titulo); font-weight: 700; font-size: 8cqw; line-height: 1.16; text-transform: uppercase; color: var(--tinta); background: linear-gradient(var(--cor-ciano), var(--cor-ciano)) 0 100% / 14cqw 2px no-repeat; }
+.tela-guia { display: grid; gap: 4.5cqw; margin-top: 6cqw; }
+.tela-guia dt { font-size: 3.6cqw; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-3); margin-bottom: 1cqw; }
+.tela-guia dd { font-size: 5.4cqw; line-height: 1.36; color: var(--tinta); }
+.tela-cal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4cqw; margin-top: 7cqw; }
+.tela-cal li { aspect-ratio: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 12%; border: 1px solid var(--linha); font-size: 3.6cqw; line-height: 1; color: var(--tinta-2); }
+.tela-cal b { font-family: var(--fonte-titulo); font-weight: 700; font-size: 6.6cqw; color: var(--tinta); }
+.tela-cal li:nth-child(7) { background: var(--cor-gelo); border-color: var(--cor-gelo); color: var(--cor-preto); }
+.tela-cal li:nth-child(7) b { color: var(--cor-preto); }
+.tela-leg { margin-top: 5cqw; font-size: 5.6cqw; line-height: 1.42; color: var(--tinta); }
+.tela-botao { margin-top: auto; padding: 4.4cqw; text-align: center; border: 1px solid var(--tinta); font-size: 5cqw; font-weight: 500; color: var(--tinta); }
+.tela-msg { align-self: flex-start; max-width: 88%; margin-top: 4cqw; padding: 3.6cqw 4.4cqw; border-radius: 4.5cqw 4.5cqw 4.5cqw 1cqw; background: #24272B; font-size: 5.2cqw; line-height: 1.36; color: var(--tinta); }
+.tela-msg-eu { align-self: flex-end; border-radius: 4.5cqw 4.5cqw 1cqw 4.5cqw; background: var(--cor-gelo); color: var(--cor-preto); margin-top: 7cqw; }
+
 .entregas > div { display: grid; gap: var(--e-1); padding: var(--e-3) 0; border-top: 1px solid var(--linha); }
 .entregas > div:last-child { border-bottom: 1px solid var(--linha); }
 .entregas dt { font-family: var(--fonte-titulo); font-weight: 500; font-size: 1.0625rem; line-height: 1.3; text-transform: uppercase; letter-spacing: .01em; color: var(--tinta); }
@@ -386,6 +410,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .abertura-grade { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: center; gap: var(--e-5); }
   .duas { grid-template-columns: 5fr 7fr; column-gap: var(--e-5); align-items: start; }
   .planos { max-width: 62rem; }
+  .recebe-grade { grid-template-columns: 6fr 5fr; column-gap: var(--e-6); align-items: start; margin-top: 0; }
+  .recebe-atual { display: none; }
+  .recebe-fone { order: 0; position: sticky; top: calc(50vh - 300px); --fone-l: 262px; padding: var(--e-4) 0; }
+  .recebe .entregas > div { min-height: 58vh; align-content: center; border: 0; }
+  .recebe .entregas > div:first-child { min-height: 46vh; }
+  .recebe .entregas dt { font-size: clamp(1.375rem, 1rem + 1vw, 1.875rem); font-weight: 700; }
+  .recebe .entregas dd { font-size: 1.25rem; max-width: 30rem; }
   .orbita-cena { --fone-l: 204px; --card-l: 78px; --orb-h: 560px; --orb-y: 132px; }
   .abertura { padding-bottom: 128px; }
 }
