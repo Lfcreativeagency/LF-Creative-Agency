@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- A órbita ----
   // Os 12 cartões giram em volta do celular. O dia escolhido vem para a frente e o roteiro dele aparece na tela.
-  // Sozinha, a órbita avança um dia a cada 3,2 s; quando a pessoa escolhe um dia, ela espera 15 s antes de voltar a andar.
+  // Sozinha, a órbita avança um dia a cada 3,2 s, dá uma volta e para. Quando a pessoa escolhe um dia, ela assume o controle.
   let dia = 0, escolhe = (i) => { dia = i; mostra(i); };
   const orbita = () => {
     const cena = document.getElementById('orbita');
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartoes = [...grade.querySelectorAll('.dia')];
     const n = cartoes.length, inclina = 72 * Math.PI / 180;
     const parado = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let pos = 0, visivel = true, pausaAte = 0, t0 = performance.now(), ultimoPasso = t0, raio = 150;
+    let pos = 0, visivel = true, pausaAte = 0, t0 = performance.now(), ultimoPasso = t0, raio = 150, passosSozinha = 0, sozinha = true;
     const mede = () => { raio = Math.min(cena.clientWidth * (cena.clientWidth < 420 ? .47 : .56), cena.clientHeight * .5); cena.style.setProperty('--raio', `${raio.toFixed(0)}px`); };
     const sai = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
     const desenha = (agora) => {
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const a = Math.PI / 2 + (i - pos) * (2 * Math.PI / n);
         const x = Math.cos(a) * raio * entrada, p = Math.sin(a) * raio * entrada;
         c.style.transform = `translate3d(${x.toFixed(1)}px, ${(p * Math.cos(inclina)).toFixed(1)}px, ${(p * Math.sin(inclina)).toFixed(1)}px)`;
-        c.style.opacity = (entrada * (.3 + .7 * (Math.sin(a) + 1) / 2)).toFixed(2);
+        c.style.opacity = (entrada * (.55 + .45 * (Math.sin(a) + 1) / 2)).toFixed(2);
       });
       fone.style.setProperty('--fy', `${(-16 + (parado ? 0 : Math.sin(t * .45) * 7) + (1 - entrada) * 70).toFixed(2)}deg`);
       fone.style.setProperty('--sobe', `${((1 - entrada) * 90).toFixed(1)}px`);
@@ -91,14 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const laco = (agora) => {
       if (visivel && !document.hidden) {
-        if (!parado && agora > pausaAte && agora - ultimoPasso > 3200) { ultimoPasso = agora; dia = (dia + 1) % n; mostra(dia); }
+        if (!parado && sozinha && agora > pausaAte && agora - ultimoPasso > 3200) { ultimoPasso = agora; dia = (dia + 1) % n; mostra(dia); passosSozinha += 1; if (passosSozinha >= n) sozinha = false; }
         desenha(agora);
       }
       if (!parado) requestAnimationFrame(laco);
     };
     escolhe = (i, daPessoa) => {
       dia = i; mostra(i);
-      if (daPessoa) pausaAte = performance.now() + 15000;
+      if (daPessoa) sozinha = false;
       if (parado) desenha(performance.now());
     };
     cena.addEventListener('pointerenter', () => { pausaAte = Math.max(pausaAte, performance.now() + 4000); });
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mes.forEach((item, i) => {
       const botao = Object.assign(document.createElement('button'), { type: 'button', className: 'dia' });
       botao.setAttribute('aria-pressed', 'false');
-      botao.setAttribute('aria-label', `Dia ${i + 1}, ${item.tipo}: ${item.titulo}`);
+      botao.setAttribute('aria-label', `${i + 1} ${item.tipo}. ${item.titulo}`);
       botao.append(
         Object.assign(document.createElement('span'), { className: 'dia-numero', textContent: String(i + 1) }),
         Object.assign(document.createElement('span'), { textContent: item.tipo }),
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     trocas.forEach((b) => b.addEventListener('click', () => {
       mes = meses[b.dataset.mes];
       trocas.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
-      grade.querySelectorAll('.dia').forEach((d, i) => d.setAttribute('aria-label', `Dia ${i + 1}, ${mes[i].tipo}: ${mes[i].titulo}`));
+      grade.querySelectorAll('.dia').forEach((d, i) => d.setAttribute('aria-label', `${i + 1} ${mes[i].tipo}. ${mes[i].titulo}`));
       escolhe(0, true);
     }));
   }
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const largo = window.matchMedia('(min-width: 1024px)');
     const atual = document.getElementById('recebe-atual');
-    let passo = 0, pausa = 0, naTela = false;
+    let passo = 0, pausa = 0, naTela = false, trocas = 0;
     const ativa = (i) => {
       passo = i;
       itens.forEach((el, n) => el.classList.toggle('on', n === i));
@@ -151,13 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     entregas.classList.add('passo-a-passo');
     ativa(0);
-    itens.forEach((el, i) => el.addEventListener('click', () => { ativa(i); pausa = performance.now() + 12000; }));
+    itens.forEach((el, i) => el.addEventListener('click', () => { ativa(i); pausa = Infinity; }));
     if ('IntersectionObserver' in window) {
       const meio = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && largo.matches) ativa(itens.indexOf(e.target)); }), { rootMargin: '-45% 0px -45% 0px' });
       itens.forEach((el) => meio.observe(el));
       new IntersectionObserver(([e]) => { naTela = e.isIntersecting; }, { threshold: .25 }).observe(entregas);
     }
-    if (!semMovimento) setInterval(() => { if (!largo.matches && naTela && !document.hidden && performance.now() > pausa) ativa((passo + 1) % itens.length); }, 2800);
+    if (!semMovimento) setInterval(() => { if (!largo.matches && naTela && !document.hidden && performance.now() > pausa && trocas < itens.length * 2) { trocas += 1; ativa((passo + 1) % itens.length); } }, 2800);
   }
 
   // ---- Aviso de cookies e Meta Pixel ----
@@ -272,6 +272,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
   document.querySelectorAll('.revela, .entra').forEach((el) => observador.observe(el));
+
+  // Indicação: tocar no cartão N vira os N primeiros e mostra o que a pessoa ganha (regras dos termos, cláusula 12).
+  // Quando a seção entra na tela, os três viram sozinhos uma vez, para mostrar o melhor caso.
+  const amigos = document.getElementById('amigos');
+  if (amigos) {
+    const cartoes = [...amigos.querySelectorAll('.amigo')], resultado = document.getElementById('amigos-resultado');
+    const frases = [
+      'Toque em um cartão para ver o que você ganha.',
+      '1 amigo: você ganha 1 mês grátis quando ele pagar o segundo mês.',
+      '2 amigos: são 2 meses grátis para você.',
+      '3 amigos ativos ao mesmo tempo: o seu Flow sai de graça enquanto os três ficarem.',
+    ];
+    let quantos = 0;
+    const marca = (n) => {
+      quantos = n;
+      cartoes.forEach((c, i) => c.setAttribute('aria-pressed', String(i < n)));
+      resultado.textContent = frases[n];
+    };
+    cartoes.forEach((c, i) => c.addEventListener('click', () => marca(quantos === i + 1 ? i : i + 1)));
+    if ('IntersectionObserver' in window) {
+      const olho = new IntersectionObserver(([e]) => { if (!e.isIntersecting) return; olho.disconnect(); setTimeout(() => { if (quantos === 0) marca(3); }, 500); }, { threshold: .6 });
+      olho.observe(amigos);
+    }
+  }
 
   // Garantia: o 7 ganha espessura (camadas empilhadas para trás) e gira conforme a seção atravessa a tela
   const sete = document.querySelector('#sete .sete-n');

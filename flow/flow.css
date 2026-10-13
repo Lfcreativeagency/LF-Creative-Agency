@@ -65,7 +65,7 @@ h1, h2, h3 {
   text-transform: uppercase; line-height: 1.08; letter-spacing: -0.005em; text-wrap: balance;
 }
 h1 { font-size: clamp(1.625rem, 1rem + 2.7vw, 3.25rem); line-height: 1.06; }
-h2 { font-size: clamp(1.5rem, 1rem + 2.2vw, 2.875rem); }
+h2 { font-size: clamp(1.75rem, 1rem + 2.2vw, 2.875rem); }
 h3 { font-size: 1.125rem; font-weight: 500; letter-spacing: .02em; line-height: 1.3; }
 p { text-wrap: pretty; }
 
@@ -132,6 +132,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .btn-conversa svg { flex: none; }
 [data-tom="escuro"] .btn-conversa { background: var(--cor-gelo); color: var(--cor-preto); border-color: var(--cor-gelo); }
 [data-conversa="off"] .btn-conversa { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 350ms ease, visibility 0s 350ms; }
+
+/* Barra fixa do celular (no computador fica o botão flutuante de WhatsApp) */
+.barra-planos { display: none; }
 
 /* ---------- Visor de câmera: cantos de enquadramento e REC ---------- */
 .hud { position: absolute; inset: 0; pointer-events: none; color: var(--tinta); font: 500 .75rem/1 ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .12em; }
@@ -286,6 +289,24 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .pares p, .indicacao-texto { max-width: 34rem; }
 .indicacao-texto { font-size: 1.125rem; color: var(--tinta); }
 
+/* Indicação: três cartões que viram em 3D. Frente: quantos amigos. Verso: o que a pessoa ganha. */
+#indicacao h2 + .indicacao-texto { margin-top: var(--e-3); }
+.amigos { display: grid; gap: var(--e-3); }
+.amigos-linha { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; perspective: 1100px; max-width: 34rem; }
+.amigo { aspect-ratio: 4 / 5; padding: 0; background: none; border: 0; cursor: pointer; color: inherit; }
+.amigo-vira { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 700ms var(--curva); }
+.amigo[aria-pressed="true"] .amigo-vira { transform: rotateY(180deg); }
+.amigo:nth-child(2) .amigo-vira { transition-delay: 90ms; }
+.amigo:nth-child(3) .amigo-vira { transition-delay: 180ms; }
+.amigo-frente, .amigo-verso { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 12%; text-align: left; backface-visibility: hidden; -webkit-backface-visibility: hidden; font-size: clamp(.8125rem, .6rem + .6vw, 1rem); line-height: 1.2; }
+.amigo-frente { background: rgba(244, 244, 242, .06); border: 1px solid rgba(244, 244, 242, .42); color: var(--tinta-2); }
+.amigo-verso { transform: rotateY(180deg); background: var(--cor-gelo); color: var(--cor-preto); font-weight: 500; }
+.amigo b { font-family: var(--fonte-titulo); font-weight: 700; font-size: clamp(1.75rem, 1rem + 3vw, 3.25rem); line-height: 1; color: var(--tinta); }
+.amigo-verso b { color: var(--cor-preto); }
+.amigo:nth-child(3) .amigo-verso b { font-size: clamp(1.25rem, .8rem + 2vw, 2.375rem); background: linear-gradient(var(--cor-ciano), var(--cor-ciano)) 0 100% / 100% .12em no-repeat; padding-bottom: .12em; }
+.amigo:hover .amigo-frente { border-color: var(--cor-gelo); }
+.amigos-resultado { min-height: 3.2em; max-width: 30rem; font-size: 1.125rem; color: var(--tinta); }
+
 /* Garantia: um 7 em relevo, com espessura de verdade (camadas empilhadas em profundidade), que gira com a rolagem */
 .garantia-grade { display: grid; gap: var(--e-4); align-items: center; }
 .sete { display: flex; align-items: flex-end; gap: var(--e-2); perspective: 900px; justify-self: start; }
@@ -416,8 +437,16 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .hud-rec { top: 30px; left: auto; right: var(--margem); transform: none; }
   .cabecalho { padding: 0 var(--margem); height: 68px; }
   .marca img { height: 34px; }
-  .btn-conversa { right: 16px; bottom: 36px; width: 48px; min-height: 48px; padding: 0; gap: 0; justify-content: center; }
-  .btn-conversa span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .btn-conversa, .passos { display: none !important; }   /* no celular a barra dos planos ocupa o pé */
+  .barra-planos {
+    position: fixed; z-index: 61; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: var(--e-2);
+    padding: 8px 12px 8px var(--margem); background: var(--cor-gelo); color: var(--cor-preto); border-top: 1px solid var(--cor-preto);
+    font-size: .9375rem; font-weight: 500; transition: transform 350ms var(--curva), visibility 0s;
+  }
+  .barra-planos .btn { background: var(--cor-preto); color: var(--cor-gelo); border-color: var(--cor-preto); }
+  .barra-planos .btn::after { content: "\2193"; }
+  .barra-planos a:focus-visible { outline: 2px solid var(--cor-preto); outline-offset: 2px; }
+  [data-conversa="off"] .barra-planos { transform: translateY(100%); visibility: hidden; transition: transform 350ms var(--curva), visibility 0s 350ms; }
   .passos { left: 12px; right: 12px; bottom: 6px; }
   .passos::before { top: 24px; bottom: -6px; }
   .marca { transition: opacity 250ms ease; }
