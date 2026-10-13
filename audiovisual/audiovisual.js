@@ -67,13 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const tocaVideo = (cena, ligar) => {
     const arquivo = cena.dataset.video;
     if (!arquivo || economia) return;
-    let video = cena.querySelector('video');
+    let video = cena.querySelector('video.cena-video');
     if (!video && ligar) {
       video = document.createElement('video');
       Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: arquivo });
       video.setAttribute('aria-hidden', 'true');
-      const capa = cena.querySelector('img');
-      if (capa) video.poster = capa.currentSrc;
+      video.className = 'cena-video';
+      video.addEventListener('playing', () => video.classList.add('tocando'), { once: true });   // entra em fade por cima da imagem
       cena.querySelector('.cena-midia').appendChild(video);
     }
     if (!video) return;

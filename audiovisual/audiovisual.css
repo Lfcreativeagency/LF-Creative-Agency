@@ -45,6 +45,9 @@
 .com-rolagem .cena-midia video { position: absolute; inset: 0; height: 100%; aspect-ratio: auto; transform: scale(1.045); transition: transform 7s ease-out; }
 .com-rolagem .cena.ativa .cena-midia img,
 .com-rolagem .cena.ativa .cena-midia video { transform: none; }
+/* vídeo da cena: aparece em fade por cima da imagem, quando começa a tocar */
+.com-rolagem .cena-midia video.cena-video { opacity: 0; transition: opacity 900ms ease, transform 7s ease-out; }
+.com-rolagem .cena-midia video.cena-video.tocando { opacity: 1; }
 
 /* Cena com vários quadros (produção): a passagem de um quadro para o outro é um giro de câmera,
    igual ao das cenas. O quadro que sai acelera para a esquerda; o que entra chega pela direita,
