@@ -236,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     raiz.dataset.tomTopo = noTopo && clara(noTopo) ? 'claro' : 'escuro';
     raiz.dataset.tom = noPe && clara(noPe) ? 'claro' : 'escuro';
     raiz.dataset.passos = noPe ? 'on' : 'off';   // some sobre o rodapé
+    raiz.dataset.rolou = window.scrollY > 140 ? 'sim' : 'nao';
     raiz.dataset.conversa = !noMeio || semBotao.includes(noMeio.id) || !noPe ? 'off' : 'on';
 
     // cursor: posição dentro da sequência de marcos
@@ -271,6 +272,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
   document.querySelectorAll('.revela, .entra').forEach((el) => observador.observe(el));
+
+  // Planos: cada cartão inclina na direção do mouse, só em telas com cursor
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('.plano').forEach((cartao) => {
+      let q = 0;
+      cartao.addEventListener('pointermove', (e) => {
+        cancelAnimationFrame(q);
+        q = requestAnimationFrame(() => {
+          const r = cartao.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+          cartao.classList.add('mexendo');
+          cartao.style.setProperty('--rx', `${((x - .5) * 9).toFixed(2)}deg`);
+          cartao.style.setProperty('--ry', `${((.5 - y) * 7).toFixed(2)}deg`);
+          cartao.style.setProperty('--mx', `${(x * 100).toFixed(0)}%`);
+          cartao.style.setProperty('--my', `${(y * 100).toFixed(0)}%`);
+        });
+      });
+      cartao.addEventListener('pointerleave', () => {
+        cancelAnimationFrame(q);
+        cartao.classList.remove('mexendo');
+        cartao.style.setProperty('--rx', '0deg'); cartao.style.setProperty('--ry', '0deg');
+      });
+    });
+  }
 
   // A órbita inclina de leve acompanhando o mouse, só em telas com cursor
   const palco = document.getElementById('abertura');

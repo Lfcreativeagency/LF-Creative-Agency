@@ -247,7 +247,23 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .plano { display: flex; flex-direction: column; gap: var(--e-2); padding: var(--e-4) var(--e-3); }
 .plano .plano-acoes { margin-top: auto; }
 .plano:not(.plano-destaque)::before { content: none; }
-.plano-destaque { border-color: rgba(244, 244, 242, .6); }
+/* O plano em destaque é um cartão claro sobre o palco escuro: troca a tinta inteira, não só a borda */
+.plano-destaque {
+  --tinta: var(--cor-preto); --tinta-2: #3D3D3D; --tinta-3: #555A60; --linha: #D4D7DA;
+  --btn-fundo: var(--cor-palco); --btn-tinta: var(--cor-gelo);
+  background: var(--cor-gelo); border-color: var(--cor-gelo);
+}
+/* Cartões em 3D: inclinam com o mouse (--rx e --ry vêm do flow.js) e o conteúdo fica em camadas de profundidade */
+.planos { perspective: 1400px; }
+.plano { transform-style: preserve-3d; transform: rotateY(calc(var(--py, 0deg) + var(--rx, 0deg))) rotateX(var(--ry, 0deg)); transition: transform 500ms var(--curva); }
+.plano.mexendo { transition: transform 80ms linear; }
+.plano > h3, .plano > .plano-frase { transform: translateZ(22px); }
+.plano > .preco { transform: translateZ(40px); }
+.plano > .plano-soma, .plano > .lista-ok { transform: translateZ(12px); }
+.plano > .plano-acoes { transform: translateZ(30px); }
+.plano:not(.plano-destaque)::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 300ms ease; background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(244, 244, 242, .12), rgba(244, 244, 242, 0) 55%); }
+.plano.mexendo::after { opacity: 1; }
+.com-movimento .plano.entra.visivel { animation-fill-mode: backwards; }   /* depois da entrada, a inclinação volta a valer */
 .plano h3 { font-size: 1.25rem; font-weight: 700; }
 .plano-frase { color: var(--tinta); font-size: 1.125rem; margin-top: -8px; }
 .preco { padding: var(--e-2) 0; border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha); color: var(--tinta-3); }
@@ -299,7 +315,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   --lt: rgba(244, 244, 242, .82); --lt-fraco: rgba(244, 244, 242, .34); --lt-forte: var(--cor-gelo);
   transition: opacity 300ms ease;
 }
-[data-tom="claro"] .passos { --lt: rgba(10, 10, 10, .74); --lt-fraco: rgba(10, 10, 10, .3); --lt-forte: var(--cor-preto); }
+[data-tom="claro"] .passos { --lt: rgba(10, 10, 10, .74); --lt-fraco: rgba(10, 10, 10, .3); --lt-forte: var(--cor-preto); --lt-fundo: var(--cor-gelo); }
+/* faixa atrás da linha do tempo, para o conteúdo que passa por baixo não embolar com os nomes */
+.passos::before { content: ""; position: absolute; left: -100vw; right: -100vw; top: -14px; bottom: -2px; background: var(--lt-fundo, var(--cor-palco)); z-index: -1; }
 [data-passos="off"] .passos { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 300ms ease, visibility 0s 300ms; }
 .passos a {
   padding: 9px 0 24px; min-height: 44px; border-top: 1px solid var(--lt-fraco); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -377,6 +395,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .btn-conversa { right: 16px; bottom: 36px; width: 48px; min-height: 48px; padding: 0; gap: 0; justify-content: center; }
   .btn-conversa span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .passos { left: 12px; right: 12px; bottom: 6px; }
+  .passos::before { top: 24px; bottom: -6px; }
+  .marca { transition: opacity 250ms ease; }
+  [data-rolou="sim"] .marca { opacity: 0; pointer-events: none; }   /* no celular o logo some depois da abertura, para não ficar por cima dos títulos */
   .passos a { height: 44px; min-height: 0; padding: 0; font-size: 0; border-top: 0; border-bottom: 2px solid var(--lt-fraco); }
   .passos a[aria-current="true"] { border-bottom-color: var(--lt-forte); }
   .passos .cursor { top: auto; bottom: -4px; }
@@ -409,7 +430,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   :root { --margem: 84px; }
   .abertura-grade { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: center; gap: var(--e-5); }
   .duas { grid-template-columns: 5fr 7fr; column-gap: var(--e-5); align-items: start; }
-  .planos { max-width: 62rem; }
+  .planos { max-width: 62rem; gap: var(--e-3); }
+  .plano-destaque { --py: 5deg; }
+  .plano:not(.plano-destaque) { --py: -5deg; }
   .recebe-grade { grid-template-columns: 6fr 5fr; column-gap: var(--e-6); align-items: start; margin-top: 0; }
   .recebe-atual { display: none; }
   .recebe-fone { order: 0; position: sticky; top: calc(50vh - 300px); --fone-l: 262px; padding: var(--e-4) 0; }
