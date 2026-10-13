@@ -113,23 +113,41 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ligar) video.play().catch(() => {}); else video.pause();
   };
 
-  // Cena com várias imagens (produção): troca de imagem a cada 3,2 s, só enquanto a cena está ativa.
-  // A cada imagem entra mais uma palavra no painel; quando o ciclo recomeça, a lista também.
+  // Cena com várias imagens (produção): elas se revezam sozinhas, só enquanto a cena está ativa.
+  // Imagem parada fica 3,2 s; quadro com data-video toca o vídeo por data-dur segundos.
+  // A cada quadro entra mais uma palavra no painel; quando o ciclo recomeça, a lista também.
   const giros = new Map();
   const gira = (cena, ligar) => {
-    const quadros = [...cena.querySelectorAll('.quadro')];
+    const quadros = [...cena.querySelectorAll('img.quadro')];
     if (quadros.length < 2) return;
-    clearInterval(giros.get(cena));
+    clearTimeout(giros.get(cena));
+    cena.querySelectorAll('.quadro-video').forEach((v) => v.pause());
     if (!ligar) return;
     quadros.forEach((q) => { q.loading = 'eager'; });
     const palavras = [...cena.querySelectorAll('.cena-palavras li')];
-    const mostra = (k) => {
+    let k = 0;
+    const passo = () => {
       quadros.forEach((q, m) => q.classList.toggle('on', m === k));
       palavras.forEach((p, m) => { p.classList.toggle('on', m <= k); p.classList.toggle('nova', m === k); });
+      const q = quadros[k];
+      let video = null, espera = 3200;
+      if (q.dataset.video && !economia) {
+        video = q.videoDoQuadro;
+        if (!video) {
+          video = document.createElement('video');
+          Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: q.dataset.video });
+          video.className = 'quadro-video'; video.setAttribute('aria-hidden', 'true');
+          q.after(video);
+          q.videoDoQuadro = video;
+        }
+        video.currentTime = 0;
+        video.play().catch(() => {});
+        espera = (Number(q.dataset.dur) || 7) * 1000;
+      }
+      cena.querySelectorAll('.quadro-video').forEach((v) => { v.classList.toggle('on', v === video); if (v !== video) v.pause(); });
+      giros.set(cena, setTimeout(() => { k = (k + 1) % quadros.length; passo(); }, espera));
     };
-    let k = 0;
-    mostra(k);
-    giros.set(cena, setInterval(() => { k = (k + 1) % quadros.length; mostra(k); }, 3200));
+    passo();
   };
 
   document.addEventListener('visibilitychange', () => { if (atual >= 0) gira(cenas[atual], !document.hidden); });

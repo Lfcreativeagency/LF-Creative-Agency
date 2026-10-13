@@ -49,16 +49,17 @@
 /* Cena com várias imagens (filmagem): elas se revezam sozinhas enquanto a cena está ativa */
 .com-rolagem .cena-midia .quadro { opacity: 0; transition: opacity 1100ms ease, transform 7s ease-out; }
 .com-rolagem .cena-midia .quadro.on { opacity: 1; }
+/* vídeo de um quadro: entra por cima da imagem dele, que serve de capa */
+.com-rolagem .cena-midia .quadro-video { opacity: 0; transition: opacity 900ms ease, transform 7s ease-out; }
+.com-rolagem .cena-midia .quadro-video.on { opacity: 1; }
 
 /* Palavras que entram junto com as imagens da produção. Sem JS, aparecem todas. */
 .cena-palavras { display: flex; flex-wrap: wrap; gap: 8px; }
 .cena-palavras li { padding: 6px 12px; border: 1px solid currentColor; font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; line-height: 1.2; }
-.com-rolagem .cena-palavras li {
-  border-color: var(--vidro-borda); max-width: 0; padding-left: 0; padding-right: 0; border-width: 0;
-  opacity: 0; overflow: hidden; white-space: nowrap; margin-right: -8px;
-  transition: max-width 700ms var(--curva), opacity 500ms ease 150ms, padding 700ms var(--curva);
-}
-.com-rolagem .cena-palavras li.on { max-width: 16rem; padding: 6px 12px; border-width: 1px; opacity: 1; margin-right: 0; }
+.com-rolagem .cena-palavras li { display: none; border-color: var(--vidro-borda); }
+.com-rolagem .cena-palavras li.on { display: block; }
+.com-rolagem .cena-palavras li.nova { animation: palavra-entra 600ms var(--curva) both; }   /* só opacidade e deslocamento, sem mexer no layout */
+@keyframes palavra-entra { from { opacity: 0; transform: translateY(8px); } }
 .com-rolagem .cena-palavras li.nova { border-color: var(--cor-ciano); }
 .com-rolagem .cena-palavras { min-height: 76px; align-content: flex-start; }
 
