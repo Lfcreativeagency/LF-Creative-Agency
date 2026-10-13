@@ -187,8 +187,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .dia:hover { border-color: var(--cor-gelo); }
 .dia[aria-pressed="true"] { background: var(--cor-gelo); border-color: var(--cor-gelo); color: var(--cor-preto); }
 .dia[aria-pressed="true"] .dia-numero { color: var(--cor-preto); }
-.mes-dica { font-size: .875rem; color: var(--tinta-2); text-align: center; }
-.orbita-cena .rotulo { text-align: center; }
+.mes-dica { font-size: .875rem; color: var(--tinta-3); text-align: center; margin-top: -12px; }
+.mes-troca { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0 var(--e-2); }
+.mes-troca .rotulo { flex-basis: 100%; text-align: center; }
+.mes-troca button { min-height: 44px; padding: 0 4px; background: none; border: 0; cursor: pointer; color: var(--tinta-3); font-size: .9375rem; font-weight: 500; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 6px; transition: color 200ms, text-decoration-color 200ms; }
+.mes-troca button:hover { color: var(--tinta); }
+.mes-troca button[aria-pressed="true"] { color: var(--tinta); text-decoration-color: var(--cor-ciano); }
+.credencial { margin-top: var(--e-3); padding-top: var(--e-2); border-top: 1px solid var(--linha); max-width: 31rem; font-size: .9375rem; color: var(--tinta-2); }
 
 /* ---------- Duas colunas: título de um lado, conteúdo do outro ---------- */
 .duas { display: grid; gap: var(--e-4); }
@@ -381,5 +386,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .abertura-grade { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: center; gap: var(--e-5); }
   .duas { grid-template-columns: 5fr 7fr; column-gap: var(--e-5); align-items: start; }
   .planos { max-width: 62rem; }
-  .orbita-cena { --fone-l: 230px; --card-l: 88px; --orb-h: 660px; --orb-y: 152px; }
+  .orbita-cena { --fone-l: 204px; --card-l: 78px; --orb-h: 560px; --orb-y: 132px; }
+  .abertura { padding-bottom: 128px; }
 }

@@ -10,21 +10,38 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ---- O mês de exemplo ----
-  // Conteúdo fictício de uma confeitaria de bairro: 8 vídeos, 2 carrosséis e 2 fotos, como no pacote real.
-  const mes = [
-    { tipo: 'Vídeo', titulo: 'O bolo que mais sai, e por quê', linhas: [['Primeira frase', 'Esse é o bolo que acaba antes do meio-dia.'], ['Fale', 'Conte qual é, de onde veio a receita e para que ocasião o pessoal pede.'], ['Mostre', 'O bolo sendo cortado, de perto.']] },
-    { tipo: 'Carrossel', titulo: '3 erros na hora de encomendar bolo de festa', linhas: [['Capa', 'Vai encomendar bolo? Não cometa estes 3 erros.'], ['Miolo', 'Deixar para a última semana, errar a conta de convidados, não avisar sobre alergias.'], ['Final', 'Chame no WhatsApp e a gente calcula com você.']] },
-    { tipo: 'Vídeo', titulo: 'Bastidor: 6 da manhã na cozinha', linhas: [['Primeira frase', 'Enquanto você dorme, isso aqui já está no forno.'], ['Fale', 'Narre o que entra primeiro e por que tudo é feito no dia.'], ['Mostre', 'A cozinha acordando, sem arrumar nada.']] },
-    { tipo: 'Vídeo', titulo: 'Quanto bolo para 30 pessoas?', linhas: [['Primeira frase', 'Festa para 30 pessoas: quantos quilos de bolo?'], ['Fale', 'Dê a conta simples e o tamanho que você indica.'], ['Mostre', 'Os tamanhos lado a lado no balcão.']] },
-    { tipo: 'Foto', titulo: 'A cliente da semana', linhas: [['Legenda', 'A Marina encomendou o bolo dos 5 anos do Theo com a gente. Olha a carinha dele.'], ['Chamada', 'Tem festa chegando? Reserve a sua data.']] },
-    { tipo: 'Vídeo', titulo: 'Vocês entregam no mesmo dia?', linhas: [['Primeira frase', 'A pergunta que a gente mais recebe.'], ['Fale', 'Explique até que horas dá para pedir e quais bairros você atende.'], ['Mostre', 'A caixa sendo fechada e saindo para entrega.']] },
-    { tipo: 'Vídeo', titulo: 'Antes de fechar o pedido, pergunte isto', linhas: [['Primeira frase', 'Três perguntas para fazer a qualquer confeitaria.'], ['Fale', 'É feito no dia? Qual o recheio? Como transportar?'], ['Mostre', 'Você no balcão, falando direto para a câmera.']] },
-    { tipo: 'Carrossel', titulo: 'Os sabores do mês', linhas: [['Capa', 'O que tem de novo na vitrine.'], ['Miolo', 'Um sabor por tela, com foto de perto e o nome.'], ['Final', 'Qual você prova primeiro? Comenta aqui.']] },
-    { tipo: 'Vídeo', titulo: 'O recheio novo, provado na hora', linhas: [['Primeira frase', 'Primeira colherada do recheio novo. Sem cortes.'], ['Fale', 'Diga o que sentiu e com qual massa combina.'], ['Mostre', 'A sua reação de verdade.']] },
-    { tipo: 'Vídeo', titulo: 'Uma encomenda, do pedido à entrega', linhas: [['Primeira frase', 'O caminho do seu bolo, em 30 segundos.'], ['Fale', 'Pedido no WhatsApp, produção no dia, entrega na porta.'], ['Mostre', 'Uma cena curta de cada etapa.']] },
-    { tipo: 'Foto', titulo: 'Quem faz: conheça a Dona Lúcia', linhas: [['Legenda', 'Há 14 anos é ela quem abre a cozinha. Se o seu bolo ficou perfeito, a culpa é dela.'], ['Chamada', 'Deixa um recado para ela aqui embaixo.']] },
-    { tipo: 'Vídeo', titulo: 'Últimas datas do mês', linhas: [['Primeira frase', 'Sobraram 4 datas para encomenda neste mês.'], ['Fale', 'Diga quais são e como reservar.'], ['Mostre', 'A agenda de pedidos aberta na sua mão.']] },
-  ];
+  // Conteúdo fictício de dois negócios do público do Flow: 8 vídeos, 2 carrosséis e 2 fotos, como no pacote real.
+  const meses = {
+    moda: [
+      { tipo: 'Vídeo', titulo: 'A peça que mais vende, e por quê', linhas: [['Primeira frase', 'Essa é a peça que esgota em toda coleção.'], ['Fale', 'Conte qual é, de que tecido é feita e com o que as clientes mais usam.'], ['Mostre', 'A peça no corpo, de frente e de costas.']] },
+      { tipo: 'Carrossel', titulo: '3 jeitos de usar a mesma camisa', linhas: [['Capa', 'Uma camisa, três looks.'], ['Miolo', 'Um look por tela: trabalho, fim de semana e noite.'], ['Final', 'Qual é o seu? Comenta o número.']] },
+      { tipo: 'Vídeo', titulo: 'Bastidor: do rolo de tecido à arara', linhas: [['Primeira frase', 'Antes de chegar na arara, ela passou por tudo isso.'], ['Fale', 'Narre as etapas e quem faz cada uma.'], ['Mostre', 'Corte, costura e acabamento, sem arrumar nada.']] },
+      { tipo: 'Vídeo', titulo: 'Como escolher o seu tamanho', linhas: [['Primeira frase', 'Ficou na dúvida entre o P e o M? Olha isso.'], ['Fale', 'Explique as medidas e como a peça veste.'], ['Mostre', 'A mesma peça em dois tamanhos, lado a lado.']] },
+      { tipo: 'Foto', titulo: 'A cliente da semana', linhas: [['Legenda', 'A Júlia levou o vestido da coleção nova para o casamento da irmã. Olha como ficou.'], ['Chamada', 'Marque a gente no seu look.']] },
+      { tipo: 'Vídeo', titulo: 'Vocês entregam para todo o Brasil?', linhas: [['Primeira frase', 'A pergunta que a gente mais recebe.'], ['Fale', 'Explique prazo, frete e como funciona a troca.'], ['Mostre', 'Um pedido sendo embalado.']] },
+      { tipo: 'Vídeo', titulo: 'Por que essa peça custa o que custa', linhas: [['Primeira frase', 'Vou te mostrar o que tem dentro desse preço.'], ['Fale', 'Tecido, costura, acabamento e quem produz.'], ['Mostre', 'Os detalhes de perto: costura, botão e etiqueta.']] },
+      { tipo: 'Carrossel', titulo: 'A coleção nova, peça por peça', linhas: [['Capa', 'Chegou. Passa para o lado.'], ['Miolo', 'Uma peça por tela, com nome e tecido.'], ['Final', 'Qual você quer primeiro?']] },
+      { tipo: 'Vídeo', titulo: 'Provando a coleção nova', linhas: [['Primeira frase', 'Primeira prova da coleção. Sem filtro.'], ['Fale', 'Diga o que achou de cada peça e para quem indica.'], ['Mostre', 'Você no provador, trocando de look.']] },
+      { tipo: 'Vídeo', titulo: 'Um pedido, do clique à sua porta', linhas: [['Primeira frase', 'O caminho do seu pedido, em 30 segundos.'], ['Fale', 'Compra no site, separação, embalagem e envio.'], ['Mostre', 'Uma cena curta de cada etapa.']] },
+      { tipo: 'Foto', titulo: 'Quem faz: conheça a Dona Marta', linhas: [['Legenda', 'Há 12 anos é ela quem costura as nossas peças. Cada acabamento passa pela mão dela.'], ['Chamada', 'Deixa um recado para ela aqui embaixo.']] },
+      { tipo: 'Vídeo', titulo: 'Últimas peças da coleção', linhas: [['Primeira frase', 'Sobraram poucas peças dessa coleção.'], ['Fale', 'Diga quais tamanhos restam e até quando.'], ['Mostre', 'A arara com o que sobrou.']] },
+    ],
+    arquitetura: [
+      { tipo: 'Vídeo', titulo: 'O projeto que mais pedem, e por quê', linhas: [['Primeira frase', 'Esse é o pedido que mais chega no escritório.'], ['Fale', 'Conte qual é o ambiente e o que as pessoas querem resolver.'], ['Mostre', 'Um projeto pronto desse tipo.']] },
+      { tipo: 'Carrossel', titulo: '3 erros ao reformar a cozinha', linhas: [['Capa', 'Vai reformar a cozinha? Evite estes 3 erros.'], ['Miolo', 'Tomada no lugar errado, bancada baixa demais e pouca luz.'], ['Final', 'Chame no WhatsApp antes de quebrar a parede.']] },
+      { tipo: 'Vídeo', titulo: 'Bastidor: dia de obra', linhas: [['Primeira frase', 'Hoje é dia de visita na obra. Vem comigo.'], ['Fale', 'Mostre o que você confere e por quê.'], ['Mostre', 'A obra como está, sem arrumar nada.']] },
+      { tipo: 'Vídeo', titulo: 'Quanto custa um projeto?', linhas: [['Primeira frase', 'Quanto custa contratar um arquiteto?'], ['Fale', 'Explique como você cobra e o que está incluído.'], ['Mostre', 'Você no escritório, falando direto para a câmera.']] },
+      { tipo: 'Foto', titulo: 'O antes e depois da semana', linhas: [['Legenda', 'A sala da Camila ganhou luz e espaço sem derrubar nenhuma parede.'], ['Chamada', 'Tem um ambiente assim? Me chama.']] },
+      { tipo: 'Vídeo', titulo: 'Vocês acompanham a obra?', linhas: [['Primeira frase', 'A pergunta que a gente mais recebe.'], ['Fale', 'Explique o que você acompanha e com que frequência.'], ['Mostre', 'Você na obra, conversando com a equipe.']] },
+      { tipo: 'Vídeo', titulo: 'Antes de contratar, pergunte isto', linhas: [['Primeira frase', 'Três perguntas para fazer a qualquer arquiteto.'], ['Fale', 'O que está incluído? Quem acompanha a obra? Qual o prazo?'], ['Mostre', 'Você falando direto para a câmera.']] },
+      { tipo: 'Carrossel', titulo: 'Um projeto, ambiente por ambiente', linhas: [['Capa', 'Apartamento de 70 m², do começo ao fim.'], ['Miolo', 'Um ambiente por tela, com a ideia principal.'], ['Final', 'Qual ambiente você mais gostou?']] },
+      { tipo: 'Vídeo', titulo: 'Escolhendo o piso com a cliente', linhas: [['Primeira frase', 'Dois pisos na mesa. Qual você escolheria?'], ['Fale', 'Diga a diferença de preço, de cuidado e de resultado.'], ['Mostre', 'As amostras lado a lado.']] },
+      { tipo: 'Vídeo', titulo: 'Um projeto, da primeira conversa à entrega', linhas: [['Primeira frase', 'Como funciona um projeto, em 30 segundos.'], ['Fale', 'Conversa, medição, projeto, obra e entrega.'], ['Mostre', 'Uma cena curta de cada etapa.']] },
+      { tipo: 'Foto', titulo: 'Quem faz: conheça o seu Antônio', linhas: [['Legenda', 'Há 15 anos é ele quem executa a marcenaria dos nossos projetos.'], ['Chamada', 'Deixa um recado para ele aqui embaixo.']] },
+      { tipo: 'Vídeo', titulo: 'Agenda de projetos do mês', linhas: [['Primeira frase', 'Abrimos 2 vagas de projeto para este mês.'], ['Fale', 'Diga para que tipo de projeto e como reservar.'], ['Mostre', 'A agenda do escritório na sua mão.']] },
+    ],
+  };
+  let mes = meses.moda;
 
   const grade = document.getElementById('mes-grade');
   const peca = document.getElementById('mes-peca');
@@ -105,6 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
       grade.append(botao);
     });
     orbita();
+    // Troca de exemplo: marca de moda ou escritório de arquitetura
+    const trocas = [...document.querySelectorAll('[data-mes]')];
+    trocas.forEach((b) => b.addEventListener('click', () => {
+      mes = meses[b.dataset.mes];
+      trocas.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+      grade.querySelectorAll('.dia').forEach((d, i) => d.setAttribute('aria-label', `Dia ${i + 1}, ${mes[i].tipo}: ${mes[i].titulo}`));
+      escolhe(0, true);
+    }));
   }
 
   // ---- Aviso de cookies e Meta Pixel ----
