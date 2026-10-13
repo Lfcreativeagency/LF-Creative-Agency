@@ -193,7 +193,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .mes-troca button { min-height: 44px; padding: 0 4px; background: none; border: 0; cursor: pointer; color: var(--tinta-3); font-size: .9375rem; font-weight: 500; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 6px; transition: color 200ms, text-decoration-color 200ms; }
 .mes-troca button:hover { color: var(--tinta); }
 .mes-troca button[aria-pressed="true"] { color: var(--tinta); text-decoration-color: var(--cor-ciano); }
-.credencial { margin-top: var(--e-3); padding-top: var(--e-2); border-top: 1px solid var(--linha); max-width: 31rem; font-size: .9375rem; color: var(--tinta-2); }
+.credencial { margin-top: var(--e-3); padding-top: var(--e-2); border-top: 1px solid var(--linha); max-width: 33rem; font-size: .9375rem; line-height: 1.5; color: var(--tinta-2); }
 
 /* ---------- Duas colunas: título de um lado, conteúdo do outro ---------- */
 .duas { display: grid; gap: var(--e-4); }
