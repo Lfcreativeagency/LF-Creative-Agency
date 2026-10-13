@@ -30,7 +30,7 @@
 <link rel="preload" href="assets/fonts/urbanist-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <link rel="stylesheet" href="base.css?v=2026-10-12a">
-<link rel="stylesheet" href="audiovisual.css?v=2026-10-12v">
+<link rel="stylesheet" href="audiovisual.css?v=2026-10-12x">
 
 <!-- Google Tag Manager: colar o mesmo snippet da LP geral quando o ID real existir -->
 </head>
@@ -41,6 +41,11 @@
   <span></span>
 </div>
 <!-- Google Tag Manager (noscript): colar junto com o snippet do head -->
+
+<!-- Desfoque de movimento horizontal, usado no giro de câmera entre as cenas -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="borrao-h" x="-8%" width="116%" y="0" height="100%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="0 0"/></filter>
+</svg>
 
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
@@ -208,6 +213,6 @@
 </footer>
 
 <script src="base.js?v=2026-10-12a"></script>
-<script src="audiovisual.js?v=2026-10-12v"></script>
+<script src="audiovisual.js?v=2026-10-12x"></script>
 </body>
 </html>

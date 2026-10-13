@@ -161,10 +161,28 @@
 .cena-link:hover::after { transform: translateX(4px); }
 .com-rolagem .cena-painel .cena-link { color: var(--vidro-texto); }
 
-/* Transição lateral: opção do seletor de prévia */
-[data-transicao="lateral"].com-rolagem .cena { opacity: 1; transform: translateX(100%); }
-[data-transicao="lateral"].com-rolagem .cena.antes { transform: translateX(-100%); }
+/* Transição de câmera (padrão): um giro rápido para o lado, como um chicote de câmera.
+   A cena que sai acelera para fora, a que entra chega no embalo, passa um pouco do ponto e assenta,
+   como uma câmera na mão. Durante o giro, a imagem ganha desfoque de movimento horizontal (filtro SVG,
+   com a intensidade animada pelo JS). O texto não desfoca. */
+[data-transicao="lateral"].com-rolagem .cena { opacity: 1; transform: translateX(104%); transition: transform 720ms cubic-bezier(.76, 0, .18, 1); }
+[data-transicao="lateral"].com-rolagem .cena.antes { transform: translateX(-104%); }
 [data-transicao="lateral"].com-rolagem .cena.ativa { transform: none; }
+[data-transicao="lateral"].com-rolagem .cena.ativa .cena-midia { animation: assenta 1250ms cubic-bezier(.2, .7, .2, 1) both; }
+[data-transicao="lateral"].com-rolagem .cena.ativa.de-tras .cena-midia { animation-name: assenta-volta; }
+@keyframes assenta {
+  0%   { transform: translate3d(3.2%, 0, 0) scale(1.07) rotate(.35deg); }
+  52%  { transform: translate3d(-.7%, .25%, 0) scale(1.035) rotate(-.12deg); }
+  78%  { transform: translate3d(.25%, -.1%, 0) scale(1.02) rotate(.04deg); }
+  100% { transform: none; }
+}
+@keyframes assenta-volta {
+  0%   { transform: translate3d(-3.2%, 0, 0) scale(1.07) rotate(-.35deg); }
+  52%  { transform: translate3d(.7%, .25%, 0) scale(1.035) rotate(.12deg); }
+  78%  { transform: translate3d(-.25%, -.1%, 0) scale(1.02) rotate(-.04deg); }
+  100% { transform: none; }
+}
+.com-rolagem .palco.movendo .cena-midia { filter: url(#borrao-h); transition: none; }
 
 /* Linha do tempo: as etapas como numa ilha de edição, com um cursor que anda com a rolagem */
 .com-rolagem .passos {
@@ -185,6 +203,15 @@
 }
 [data-tom="claro"] .passos button { color: rgba(10, 10, 10, .82); border-top-color: rgba(10, 10, 10, .35); text-shadow: none; }
 [data-tom="claro"] .passos button[aria-current="true"] { color: var(--cor-preto); border-top-color: var(--cor-preto); }
+
+/* Pausar e continuar a sequência automática, ao lado do REC */
+.auto-ctl {
+  position: absolute; z-index: 6; top: 22px; left: calc(50% + 118px); min-height: 32px; padding: 0 12px;
+  border: 1px solid rgba(244, 244, 242, .34); background: rgba(12, 14, 16, .4); color: var(--cor-gelo); cursor: pointer;
+  font: 500 .6875rem/1 ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .12em; text-transform: uppercase;
+}
+.auto-ctl:hover { border-color: var(--cor-ciano); }
+.hud.parado .hud-rec b { animation-play-state: paused; opacity: .35; }
 
 /* Tela de carregamento: logo e uma linha, só enquanto a primeira cena carrega */
 .claquete {
@@ -309,6 +336,7 @@ body { background: var(--cor-preto); }
   [data-tom="claro"] .passos button { border-bottom-color: rgba(10, 10, 10, .35); }
   [data-tom="claro"] .passos button[aria-current="true"] { border-bottom-color: var(--cor-preto); }
   .passos .cursor { top: auto; bottom: -4px; }
+  .auto-ctl { top: 118px; left: auto; right: 12px; }
 }
 
 /* Sem suporte a desfoque de fundo: o vidro fica mais opaco para o texto continuar legível */

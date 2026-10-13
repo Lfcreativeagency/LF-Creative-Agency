@@ -119,6 +119,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('visibilitychange', () => { if (atual >= 0) gira(cenas[atual], !document.hidden); });
 
+  // Reprodução automática (pedido do Breno em 12/10/2026): a abertura fica parada; quando a pessoa
+  // rola para a primeira etapa, o filme segue sozinho até o fechamento. Rolar, tocar ou usar o teclado
+  // devolve o controle para a pessoa. Passar o mouse num painel segura a cena para dar tempo de ler.
+  let auto = false, manual = false, pausado = false, sobre = false, relogioAuto = 0, autoDesde = 0;
+  const duracao = (cena) => { const q = cena.querySelectorAll('img.quadro').length; return q > 1 ? q * 2000 : 5000; };
+  const controle = document.createElement('button');
+  controle.type = 'button'; controle.className = 'auto-ctl'; controle.hidden = true;
+  palco.appendChild(controle);
+  const pinta = () => {
+    controle.hidden = atual < 1;
+    const tocando = auto && !pausado;
+    controle.textContent = tocando ? 'Pausar' : 'Continuar';
+    controle.setAttribute('aria-label', tocando ? 'Pausar a sequência' : 'Continuar a sequência');
+    hud.classList.toggle('parado', !tocando && atual >= 1);
+  };
+  const agenda = () => {
+    clearTimeout(relogioAuto);
+    pinta();
+    if (!auto || pausado || sobre || atual < 1) return;
+    relogioAuto = setTimeout(() => {
+      if (atual >= n - 1) { auto = false; pinta(); document.getElementById('contato').scrollIntoView({ behavior: 'smooth' }); }
+      else vai(atual + 1);
+    }, duracao(cenas[atual]));
+  };
+  controle.addEventListener('click', () => {
+    if (auto) pausado = !pausado;
+    else { auto = true; manual = false; pausado = false; autoDesde = performance.now(); }
+    agenda();
+  });
+  const assume = (e) => {   // a pessoa assumiu o controle
+    if (!auto || performance.now() - autoDesde < 1600) return;   // ignora a inércia do gesto que deu a partida
+    if (e.type === 'keydown' && !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '].includes(e.key)) return;
+    auto = false; manual = true; agenda();
+  };
+  ['wheel', 'touchmove', 'keydown'].forEach((tipo) => window.addEventListener(tipo, assume, { passive: true }));
+  palco.addEventListener('pointerover', (e) => { if (e.pointerType === 'mouse' && e.target.closest('.cena-painel')) { sobre = true; agenda(); } });
+  palco.addEventListener('pointerout', (e) => { if (e.pointerType === 'mouse' && e.target.closest('.cena-painel')) { sobre = false; agenda(); } });
+
+  // Giro de câmera: desfoque de movimento horizontal durante a troca de cena.
+  // Sobe rápido, atinge o pico no meio do giro e some quando a cena assenta. Só em telas com mouse,
+  // porque em celular o filtro pesa.
+  const borrao = document.querySelector('#borrao-h feGaussianBlur');
+  const comBorrao = borrao && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let quadroGiro = 0;
+  const giroDeCamera = (deTras) => {
+    cenas.forEach((c) => c.classList.toggle('de-tras', deTras));
+    if (!comBorrao) return;
+    cancelAnimationFrame(quadroGiro);
+    palco.classList.add('movendo');
+    const t0 = performance.now(), dur = 760, pico = 54;
+    const passo = (t) => {
+      const x = Math.min(1, (t - t0) / dur);
+      borrao.setAttribute('stdDeviation', (Math.sin(Math.PI * x) ** 1.4 * pico).toFixed(1) + ' 0');
+      if (x < 1) quadroGiro = requestAnimationFrame(passo);
+      else { palco.classList.remove('movendo'); borrao.setAttribute('stdDeviation', '0 0'); }
+    };
+    quadroGiro = requestAnimationFrame(passo);
+  };
+
   let atual = -1, fracao = 0;
   const atualiza = () => {
     const p = Math.min(0.9999, Math.max(0, (window.scrollY - inicio()) / percurso()));
@@ -134,7 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
     relogio.textContent = `00:${dois(Math.floor(quadros / 1440))}:${dois(Math.floor(quadros / 24) % 60)}:${dois(quadros % 24)}`;
     if (i === atual) return;
     if (atual !== -1) { hud.classList.remove('corte'); void hud.offsetWidth; hud.classList.add('corte'); }   // cantos buscam o foco
+    const anterior = atual;
     atual = i;
+    if (anterior !== -1) giroDeCamera(i < anterior);
+    if (i === 0) { auto = false; manual = false; pausado = false; }
+    else if (anterior === 0 && !manual && !auto) { auto = true; autoDesde = performance.now(); }
+    agenda();
     cenas.forEach((cena, m) => {
       cena.classList.toggle('ativa', m === i);
       cena.classList.toggle('visivel', m === i);   // liga o traço ciano do título (regra da LP geral)
