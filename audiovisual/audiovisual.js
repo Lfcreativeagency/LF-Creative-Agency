@@ -62,39 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
   palco.appendChild(hud);
   const relogio = hud.querySelector('span');
 
-  // Som opcional, desligado por padrão: tom de sala sintetizado e um bipe curto a cada corte.
-  // Tudo gerado no navegador, sem arquivo de áudio. Só começa depois do clique, como os navegadores exigem.
-  let audio = null;
-  const som = document.createElement('button');
-  som.type = 'button'; som.className = 'som'; som.textContent = 'Som: off'; som.setAttribute('aria-pressed', 'false');
-  som.setAttribute('aria-label', 'Ligar ou desligar o som ambiente');
-  som.addEventListener('click', () => {
-    if (!audio) {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const buf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
-      const d = buf.getChannelData(0);
-      let ult = 0;
-      for (let k = 0; k < d.length; k++) { ult = (ult + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[k] = ult * 3.5; }   // ruído marrom
-      const fonte = ctx.createBufferSource(); fonte.buffer = buf; fonte.loop = true;
-      const filtro = ctx.createBiquadFilter(); filtro.type = 'lowpass'; filtro.frequency.value = 420;
-      const ganho = ctx.createGain(); ganho.gain.value = 0;
-      fonte.connect(filtro).connect(ganho).connect(ctx.destination); fonte.start();
-      audio = { ctx, ganho, ligado: false };
-    }
-    audio.ligado = !audio.ligado;
-    audio.ctx.resume();
-    audio.ganho.gain.setTargetAtTime(audio.ligado ? 0.07 : 0, audio.ctx.currentTime, 0.25);
-    som.textContent = audio.ligado ? 'Som: on' : 'Som: off';
-    som.setAttribute('aria-pressed', String(audio.ligado));
-  });
-  palco.appendChild(som);
-  const bipe = () => {
-    if (!audio || !audio.ligado) return;
-    const { ctx } = audio, o = ctx.createOscillator(), g = ctx.createGain();
-    o.frequency.value = 1200; g.gain.setValueAtTime(0.035, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.09);
-    o.connect(g).connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.1);
-  };
-
   // Vídeo da cena: só é criado quando a cena entra, e só se data-video tiver um arquivo
   const economia = navigator.connection && navigator.connection.saveData;
   const tocaVideo = (cena, ligar) => {
@@ -114,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Cena com várias imagens (produção): elas se revezam sozinhas, só enquanto a cena está ativa.
-  // Imagem parada fica 3,2 s; quadro com data-video toca o vídeo por data-dur segundos.
+  // Cada quadro fica 2 s (ou data-dur); quadro com data-video toca o vídeo nesse intervalo.
   // A cada quadro entra mais uma palavra no painel; quando o ciclo recomeça, a lista também.
   const giros = new Map();
   const gira = (cena, ligar) => {
@@ -130,7 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
       quadros.forEach((q, m) => q.classList.toggle('on', m === k));
       palavras.forEach((p, m) => { p.classList.toggle('on', m <= k); p.classList.toggle('nova', m === k); });
       const q = quadros[k];
-      let video = null, espera = 3200;
+      let video = null;
+      const espera = (Number(q.dataset.dur) || 2) * 1000;   // 2 s por quadro, imagem ou vídeo
       if (q.dataset.video && !economia) {
         video = q.videoDoQuadro;
         if (!video) {
@@ -142,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         video.currentTime = 0;
         video.play().catch(() => {});
-        espera = (Number(q.dataset.dur) || 7) * 1000;
       }
       cena.querySelectorAll('.quadro-video').forEach((v) => { v.classList.toggle('on', v === video); if (v !== video) v.pause(); });
       giros.set(cena, setTimeout(() => { k = (k + 1) % quadros.length; passo(); }, espera));
@@ -166,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dois = (v) => String(v).padStart(2, '0');
     relogio.textContent = `00:${dois(Math.floor(quadros / 1440))}:${dois(Math.floor(quadros / 24) % 60)}:${dois(quadros % 24)}`;
     if (i === atual) return;
-    if (atual !== -1) { hud.classList.remove('corte'); void hud.offsetWidth; hud.classList.add('corte'); bipe(); }   // cantos buscam o foco
+    if (atual !== -1) { hud.classList.remove('corte'); void hud.offsetWidth; hud.classList.add('corte'); }   // cantos buscam o foco
     atual = i;
     cenas.forEach((cena, m) => {
       cena.classList.toggle('ativa', m === i);

@@ -47,10 +47,10 @@
 .com-rolagem .cena.ativa .cena-midia video { transform: none; }
 
 /* Cena com várias imagens (filmagem): elas se revezam sozinhas enquanto a cena está ativa */
-.com-rolagem .cena-midia .quadro { opacity: 0; transition: opacity 1100ms ease, transform 7s ease-out; }
+.com-rolagem .cena-midia .quadro { opacity: 0; transition: opacity 450ms ease, transform 7s ease-out; }
 .com-rolagem .cena-midia .quadro.on { opacity: 1; }
 /* vídeo de um quadro: entra por cima da imagem dele, que serve de capa */
-.com-rolagem .cena-midia .quadro-video { opacity: 0; transition: opacity 900ms ease, transform 7s ease-out; }
+.com-rolagem .cena-midia .quadro-video { opacity: 0; transition: opacity 450ms ease, transform 7s ease-out; }
 .com-rolagem .cena-midia .quadro-video.on { opacity: 1; }
 
 /* Palavras que entram junto com as imagens da produção. Sem JS, aparecem todas. */
@@ -58,7 +58,7 @@
 .cena-palavras li { padding: 6px 12px; border: 1px solid currentColor; font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; line-height: 1.2; }
 .com-rolagem .cena-palavras li { display: none; border-color: var(--vidro-borda); }
 .com-rolagem .cena-palavras li.on { display: block; }
-.com-rolagem .cena-palavras li.nova { animation: palavra-entra 600ms var(--curva) both; }   /* só opacidade e deslocamento, sem mexer no layout */
+.com-rolagem .cena-palavras li.nova { animation: palavra-entra 400ms var(--curva) both; }   /* só opacidade e deslocamento, sem mexer no layout */
 @keyframes palavra-entra { from { opacity: 0; transform: translateY(8px); } }
 .com-rolagem .cena-palavras li.nova { border-color: var(--cor-ciano); }
 .com-rolagem .cena-palavras { min-height: 76px; align-content: flex-start; }
@@ -186,14 +186,6 @@
 [data-tom="claro"] .passos button { color: rgba(10, 10, 10, .82); border-top-color: rgba(10, 10, 10, .35); text-shadow: none; }
 [data-tom="claro"] .passos button[aria-current="true"] { color: var(--cor-preto); border-top-color: var(--cor-preto); }
 
-/* Botão de som, ao lado do REC */
-.som {
-  position: absolute; z-index: 6; top: 22px; left: calc(50% + 118px); min-height: 32px; padding: 0 12px;
-  border: 1px solid rgba(244, 244, 242, .34); background: rgba(12, 14, 16, .4); color: var(--cor-gelo); cursor: pointer;
-  font: 500 .6875rem/1 ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .12em; text-transform: uppercase;
-}
-.som[aria-pressed="true"] { border-color: var(--cor-ciano); }
-
 /* Tela de carregamento: logo e uma linha, só enquanto a primeira cena carrega */
 .claquete {
   position: fixed; inset: 0; z-index: 200; display: grid; place-content: center; justify-items: center; gap: 28px;
@@ -317,7 +309,6 @@ body { background: var(--cor-preto); }
   [data-tom="claro"] .passos button { border-bottom-color: rgba(10, 10, 10, .35); }
   [data-tom="claro"] .passos button[aria-current="true"] { border-bottom-color: var(--cor-preto); }
   .passos .cursor { top: auto; bottom: -4px; }
-  .som { top: 118px; left: auto; right: 12px; }
 }
 
 /* Sem suporte a desfoque de fundo: o vidro fica mais opaco para o texto continuar legível */
