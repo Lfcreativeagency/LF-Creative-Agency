@@ -27,7 +27,7 @@
 .passos { display: none; }
 
 /* ---------- Palco fixo: ligado pelo JS (classe .com-rolagem no <html>) ---------- */
-.com-rolagem .filme { height: calc(var(--cenas, 7) * 100vh); }
+.com-rolagem .filme { height: calc(var(--cenas, 5) * 100vh); }
 .com-rolagem .palco {
   position: sticky; top: 0;
   height: 100vh; height: 100svh;
@@ -187,7 +187,7 @@
 /* Linha do tempo: as etapas como numa ilha de edição, com um cursor que anda com a rolagem */
 .com-rolagem .passos {
   position: absolute; z-index: 5; left: 84px; right: 84px; bottom: 26px;
-  display: grid; grid-template-columns: repeat(var(--cenas, 6), 1fr); gap: 3px;
+  display: grid; grid-template-columns: repeat(var(--cenas, 5), 1fr); gap: 3px;
 }
 .passos button {
   padding: 9px 0 0; border: 0; border-top: 1px solid rgba(244, 244, 242, .38); background: none; cursor: pointer;
