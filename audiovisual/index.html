@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produção audiovisual, da ideia à tela | LF Creative Agency</title>
+<title>Produção audiovisual | LF Creative Agency</title>
 <meta name="description" content="Reunião, roteiro, produção, edição e publicação. A LF Creative organiza a produção audiovisual da sua empresa, da ideia à tela.">
 <meta name="theme-color" content="#0A0A0A">
 <!-- PRÉVIA: página no ar sem indexação. Remover esta linha quando estiver pronta para o público. -->
@@ -11,7 +11,7 @@
 <link rel="canonical" href="https://lfcreative.com.br/audiovisual/">
 
 <!-- Open Graph -->
-<meta property="og:title" content="Produção audiovisual, da ideia à tela | LF Creative">
+<meta property="og:title" content="Produção audiovisual | LF Creative Agency">
 <meta property="og:description" content="Reunião, roteiro, produção, edição e publicação. A gente organiza tudo.">
 <meta property="og:image" content="https://lfcreative.com.br/audiovisual/assets/img/og-audiovisual.jpg">
 <meta property="og:image:width" content="1200">
@@ -30,7 +30,7 @@
 <link rel="preload" href="assets/fonts/urbanist-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <link rel="stylesheet" href="base.css?v=2026-10-12a">
-<link rel="stylesheet" href="audiovisual.css?v=2026-10-13i">
+<link rel="stylesheet" href="audiovisual.css?v=2026-10-14b">
 
 <!-- Google Tag Manager: colar o mesmo snippet da LP geral quando o ID real existir -->
 </head>
@@ -62,7 +62,7 @@
 
 <!-- FILME: sete cenas, do set à entrega. Com JS vira um palco fixo que troca de cena na rolagem;
      sem JS ou com "reduzir movimento", as cenas ficam empilhadas como seções comuns. -->
-<section class="filme" id="filme" aria-label="Da ideia à tela, em cinco cenas">
+<section class="filme" id="filme" aria-label="Produção audiovisual em cinco cenas">
   <div class="palco">
     <article class="cena cena-abertura" id="cena-abertura" data-nome="Abertura" style="--foco:50%" data-tom="claro" data-video="assets/video/set.mp4">
       <div class="cena-midia">
@@ -70,7 +70,10 @@
       </div>
       <div class="cena-texto">
         <div class="cena-titulo">
-          <h1><span class="p" style="--i:0">Da</span> <span class="p" style="--i:1">ideia</span> <span class="p" style="--i:2">à</span> <em class="p" style="--i:3">tela</em></h1>
+          <!-- Vinheta 3D aprovada do logo (ID VISUAL/Vinheta do logo), em preto e com fundo transparente (WebM com alfa; HEVC com alfa no Safari). Toca uma vez e para no quadro final. -->
+          <video class="logo-3d" muted playsinline preload="none" aria-hidden="true" width="700" height="600"></video>
+          <img class="logo-fixo" src="assets/img/logo-lf-preto.svg" alt="LF Creative Agency" width="160" height="130">
+          <h1 class="so-leitor">LF Creative Agency: produção audiovisual</h1>   <!-- título só para o Google e leitores de tela -->
         </div>
         <div class="cena-painel">
           <p class="cena-apoio">Reunião, roteiro, produção, edição e publicação. A gente organiza tudo.</p>
@@ -152,6 +155,10 @@
         </div>
       </div>
     </article>
+    <button class="rolar" type="button" aria-label="Começar a sequência das etapas">
+      <span>Role para assistir</span>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
     <nav class="passos" aria-label="Cenas"></nav>
   </div>
 </section>
@@ -197,6 +204,6 @@
 </footer>
 
 <script src="base.js?v=2026-10-12a"></script>
-<script src="audiovisual.js?v=2026-10-13i"></script>
+<script src="audiovisual.js?v=2026-10-14b"></script>
 </body>
 </html>

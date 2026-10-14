@@ -10,7 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const cenas = filme ? [...filme.querySelectorAll('.cena')] : [];
 
   // Tela de carregamento: sai quando a primeira imagem chega (no mínimo 0,9 s, no máximo 3 s)
-  const libera = () => { raiz.classList.remove('carregando'); raiz.classList.add('pronto'); };
+  // Vinheta 3D do logo, com fundo transparente. Safari e os navegadores do iPhone usam HEVC com alfa;
+  // os demais, WebM com alfa. Sem movimento reduzido. Se o vídeo falhar, fica o logo parado.
+  const logo3d = document.querySelector('.logo-3d');
+  const webkit = /^((?!chrome|chromium|android|edg).)*safari/i.test(navigator.userAgent) || /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (logo3d && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    logo3d.addEventListener('loadeddata', () => raiz.classList.add('logo-vivo'), { once: true });
+    logo3d.addEventListener('error', () => raiz.classList.remove('logo-vivo'));
+    logo3d.src = webkit ? 'assets/video/logo-3d.mov' : 'assets/video/logo-3d.webm';
+    logo3d.load();
+  }
+  const libera = () => {
+    raiz.classList.remove('carregando'); raiz.classList.add('pronto');
+    if (logo3d && logo3d.src) logo3d.play().catch(() => {});   // toca uma vez, quando a página abre
+  };
   const primeira = cenas[0] && cenas[0].querySelector('img');
   const espera = Math.max(0, 900 - performance.now());
   if (!primeira || primeira.complete) setTimeout(libera, espera);
@@ -127,11 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // rola para a primeira etapa, o filme segue sozinho até o fechamento. Rolar, tocar ou usar o teclado
   // devolve o controle para a pessoa. Passar o mouse num painel segura a cena para dar tempo de ler.
   let auto = false, manual = false, pausado = false, sobre = false, relogioAuto = 0, autoDesde = 0;
-  const duracao = (cena) => {   // produção: 3,5 s por quadro; demais: tempo de leitura do texto, entre 4,5 e 8 s
+  const duracao = (cena) => {   // produção: 3,5 s por quadro; demais: tempo de leitura do texto, entre 3,8 e 5,5 s
     const q = cena.querySelectorAll('img.quadro').length;
     if (q > 1) return q * 3500;
     const letras = (cena.querySelector('.cena-painel') || cena).textContent.replace(/\s+/g, ' ').length;
-    return Math.min(7000, Math.max(4500, 2400 + letras * 26));
+    return Math.min(5500, Math.max(3800, 1800 + letras * 22));   // mais rápido: o filme passa sozinho
   };
   const controle = document.createElement('button');
   controle.type = 'button'; controle.className = 'auto-ctl'; controle.hidden = true;
@@ -152,6 +165,10 @@ document.addEventListener('DOMContentLoaded', () => {
       else vai(atual + 1);
     }, duracao(cenas[atual]));
   };
+  // Convite para rolar: clicar faz o mesmo que rolar, o filme começa e segue sozinho
+  const rolar = filme.querySelector('.rolar');
+  if (rolar) rolar.addEventListener('click', () => vai(1));
+
   controle.addEventListener('click', () => {
     if (auto) pausado = !pausado;
     else { auto = true; manual = false; pausado = false; autoDesde = performance.now(); }
@@ -198,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     raiz.dataset.tom = passou ? 'escuro' : (cenas[i].dataset.tom || 'escuro');
     const noFim = filme.getBoundingClientRect().bottom < window.innerHeight * 0.6;
     raiz.dataset.conversa = (i === 0 || noFim) ? 'off' : 'on';   // abertura e fechamento já têm os próprios botões
+    raiz.classList.toggle('na-abertura', i === 0 && !passou);
     hud.classList.toggle('fora', passou);   // pausa o piscar do REC fora da tela
     const quadros = Math.round(p * n * 10 * 24);   // cada cena vale 10 s a 24 quadros
     const dois = (v) => String(v).padStart(2, '0');

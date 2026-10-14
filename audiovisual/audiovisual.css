@@ -162,18 +162,28 @@
 }
 [data-painel="claro"].com-rolagem .cena-painel .btn { background: var(--cor-preto); color: var(--cor-gelo); }
 
-/* Abertura: o título entra solto no vazio do fundo infinito; o painel leva só a frase e o botão */
+/* Abertura: a vinheta 3D do logo se forma no vazio do fundo infinito e o título entra embaixo dela.
+   O vídeo tem fundo transparente. Se ele não tocar, fica o logo parado. */
+.logo-3d { display: none; }
+.so-leitor { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.logo-fixo { width: 160px; height: auto; margin-bottom: var(--e-2); }
+.com-rolagem.logo-vivo .logo-fixo { display: none; }
+.com-rolagem .logo-fixo { width: auto; height: clamp(150px, 30vh, 300px); margin: 0 auto var(--e-1); }
+.com-rolagem.logo-vivo .logo-3d { display: block; width: auto; height: clamp(180px, 36vh, 360px); margin: 0 auto; }
 .com-rolagem .cena-abertura .cena-titulo {
-  position: absolute; left: 0; right: 0; top: 19%;
+  position: absolute; left: 0; right: 0; top: 12%;
   margin: 0; padding: 0 var(--margem); text-align: center;
 }
-.com-rolagem .cena-abertura h1 { font-size: clamp(2rem, 5.2vw, 5rem); }
+.com-rolagem .cena-abertura h1 { font-size: clamp(1.125rem, .8rem + 1.5vw, 2.125rem); letter-spacing: .06em; margin-top: var(--e-1); }
 .com-rolagem .cena-abertura .cena-painel { padding-top: var(--e-4); }
+.com-rolagem .marca { transition: opacity 400ms ease; }
+.na-abertura.com-rolagem .marca { opacity: 0; pointer-events: none; }   /* o logo grande já está na cena */
 
-/* Abertura: o título entra palavra por palavra, saindo do desfoque */
+/* O título entra palavra por palavra, saindo do desfoque, depois que o logo se forma */
 .com-rolagem .cena-abertura h1 .p { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(8px); }
-.com-rolagem.pronto .cena-abertura.ativa h1 .p { animation: palavra 800ms var(--curva) calc(350ms + var(--i) * 170ms) forwards; }
+.com-rolagem.pronto .cena-abertura.ativa h1 .p { animation: palavra 800ms var(--curva) calc(2300ms + var(--i) * 220ms) forwards; }
 @keyframes palavra { to { opacity: 1; transform: none; filter: none; } }
+.com-movimento.com-rolagem .cena-abertura h1 em { transition-delay: 3100ms; }
 
 /* Link de conversa dentro do painel de cada etapa */
 .cena-link { justify-self: start; font-weight: 500; font-size: .9375rem; }
@@ -232,6 +242,20 @@
 }
 .auto-ctl:hover { border-color: var(--cor-ciano); }
 .hud.parado .hud-rec b { animation-play-state: paused; opacity: .35; }
+
+/* Convite para rolar: só na abertura. Ao rolar ou clicar, o filme segue sozinho. */
+.rolar { display: none; }
+.com-rolagem .rolar {
+  position: absolute; z-index: 6; left: 50%; bottom: 76px; transform: translateX(-50%);
+  display: grid; justify-items: center; gap: 2px; padding: 8px 14px; border: 0; background: none; cursor: pointer;
+  font: 500 .75rem/1 var(--fonte-texto); letter-spacing: .18em; text-transform: uppercase; color: var(--cor-preto);
+  text-shadow: 0 0 10px rgba(255, 255, 255, .95), 0 0 2px rgba(255, 255, 255, .9);   /* lê sobre cabos e equipamento */
+  opacity: 0; visibility: hidden; transition: opacity 500ms ease, visibility 0s 500ms;
+}
+.na-abertura.com-rolagem.pronto .rolar { opacity: 1; visibility: visible; transition: opacity 700ms ease 3400ms, visibility 0s; }   /* aparece depois que o logo e o título se formam */
+.rolar svg { animation: desce 1.6s var(--curva) infinite; }
+@keyframes desce { 0%, 100% { transform: translateY(0); opacity: .45; } 50% { transform: translateY(7px); opacity: 1; } }
+.rolar:hover svg { animation-duration: .9s; }
 
 /* Tela de carregamento: logo e uma linha, só enquanto a primeira cena carrega */
 .claquete {
@@ -354,7 +378,10 @@ body { background: var(--cor-preto); }
     transform: translateY(18px);
   }
   .com-rolagem .cena.ativa .cena-painel { transform: none; }
-  .com-rolagem .cena-abertura .cena-titulo { top: 21%; }
+  .com-rolagem .cena-abertura .cena-titulo { top: 14%; }
+  .com-rolagem.logo-vivo .logo-3d { height: clamp(150px, 26vh, 240px); }
+  .com-rolagem .rolar { bottom: auto; top: calc(14% + clamp(150px, 26vh, 240px) + 32px); }   /* entre o título e o painel */
+  .com-rolagem .logo-fixo { height: clamp(120px, 20vh, 200px); }
   .com-rolagem .cena-abertura .cena-painel { padding-top: var(--e-4); }
   .com-rolagem .passos { left: 12px; right: 12px; bottom: 8px; }
   .com-rolagem .cabecalho .btn { right: 24px; bottom: 54px; width: 40px; min-height: 40px; padding: 0; gap: 0; justify-content: center; font-size: 0; }
