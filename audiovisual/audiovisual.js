@@ -17,12 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (logo3d && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     logo3d.addEventListener('loadeddata', () => raiz.classList.add('logo-vivo'), { once: true });
     logo3d.addEventListener('error', () => raiz.classList.remove('logo-vivo'));
-    logo3d.src = webkit ? 'assets/video/logo-3d.mov' : 'assets/video/logo-3d.webm';
+    logo3d.src = webkit ? 'assets/video/logo-3d.mov?v=2' : 'assets/video/logo-3d.webm?v=2';
     logo3d.load();
   }
   const libera = () => {
     raiz.classList.remove('carregando'); raiz.classList.add('pronto');
-    if (logo3d && logo3d.src) logo3d.play().catch(() => {});   // toca uma vez, quando a página abre
+    if (logo3d && logo3d.src) setTimeout(() => logo3d.play().catch(() => {}), 400);   // toca uma vez, depois que a tela de carregamento some
   };
   const primeira = cenas[0] && cenas[0].querySelector('img');
   const espera = Math.max(0, 900 - performance.now());
