@@ -77,13 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Vídeo da cena: só é criado quando a cena entra, e só se data-video tiver um arquivo
   const economia = navigator.connection && navigator.connection.saveData;
+  const versao = (document.currentScript || document.querySelector('script[src*="audiovisual.js"]')).src.replace(/^[^?]*/, '');   // mesma ?v= do script: vídeo trocado não fica preso no cache
   const tocaVideo = (cena, ligar) => {
     const arquivo = cena.dataset.video;
     if (!arquivo || economia) return;
     let video = cena.querySelector('video.cena-video');
     if (!video && ligar) {
       video = document.createElement('video');
-      Object.assign(video, { muted: true, loop: !('umaVez' in cena.dataset), playsInline: true, preload: 'auto', src: arquivo });
+      Object.assign(video, { muted: true, loop: !('umaVez' in cena.dataset), playsInline: true, preload: 'auto', src: arquivo + versao });
       video.setAttribute('aria-hidden', 'true');
       video.className = 'cena-video';
       video.addEventListener('playing', () => video.classList.add('tocando'), { once: true });   // entra em fade por cima da imagem
@@ -130,23 +131,49 @@ document.addEventListener('DOMContentLoaded', () => {
       palavras.forEach((p, m) => { p.classList.toggle('on', m <= k); p.classList.toggle('nova', m === k); });
       if (anterior !== -1) giroDeCamera(false);
       const espera = (Number(q.dataset.dur) || 3.5) * 1000;
-      giros.set(cena, setTimeout(() => { anterior = k; k = (k + 1) % quadros.length; passo(); }, espera));
+      if (k < quadros.length - 1) giros.set(cena, setTimeout(() => { anterior = k; k += 1; passo(); }, espera));   // para no último quadro: o capítulo acabou
     };
     passo();
   };
 
   document.addEventListener('visibilitychange', () => { if (atual >= 0) gira(cenas[atual], !document.hidden); });
 
-  // Reprodução automática (pedido do Breno em 12/10/2026): a abertura fica parada; quando a pessoa
-  // rola para a primeira etapa, o filme segue sozinho até o fechamento. Rolar, tocar ou usar o teclado
-  // devolve o controle para a pessoa. Passar o mouse num painel segura a cena para dar tempo de ler.
-  let auto = false, manual = false, pausado = false, sobre = false, relogioAuto = 0, autoDesde = 0;
-  const duracao = (cena) => {   // produção: 3,5 s por quadro; demais: tempo de leitura do texto, entre 3,8 e 5,5 s
-    const q = cena.querySelectorAll('img.quadro').length;
-    if (q > 1) return q * 3500;
-    if (cena.dataset.dur) return Number(cena.dataset.dur) * 1000;   // cena com vídeo de ação: o tempo do vídeo
+  // Capítulos (pedido do Breno em 19/10/2026): a abertura fica parada; quando a pessoa rola para o
+  // primeiro capítulo, cada um toca o seu vídeo e para no último quadro. Aí aparece a seta "Continuar":
+  // clicar ou rolar desce na hora; sem nada em 2 s, a página desce sozinha. Rolar no meio do vídeo pula
+  // para o próximo. Passar o mouse num painel ou apertar Pausar segura a descida.
+  let auto = false, pausado = false, sobre = false, relogioAuto = 0, relogioSegue = 0, fimDoCapitulo = false;
+  const SEGUE_EM = 2000;
+  const duracao = (cena) => {   // quando o capítulo acaba, se não houver vídeo para avisar
+    const quadros = [...cena.querySelectorAll('img.quadro')];
+    if (quadros.length > 1) return quadros.reduce((t, q) => t + (Number(q.dataset.dur) || 3.5) * 1000, 0);   // produção: a soma dos quadros
+    if (cena.dataset.dur) return Number(cena.dataset.dur) * 1000;   // capítulo com vídeo: o tempo do vídeo
     const letras = (cena.querySelector('.cena-painel') || cena).textContent.replace(/\s+/g, ' ').length;
-    return Math.min(5500, Math.max(3800, 1800 + letras * 22));   // mais rápido: o filme passa sozinho
+    return Math.min(5500, Math.max(3800, 1800 + letras * 22));   // imagem parada: o tempo de leitura
+  };
+  const seta = filme.querySelector('.seguir');
+  const posicionaSeta = () => {   // centrada embaixo; se o painel ocupa o meio da base, fica logo acima dele
+    if (!seta) return;
+    const p = cenas[atual] && cenas[atual].querySelector('.cena-painel');
+    const r = p && p.getBoundingClientRect();
+    const meio = window.innerWidth / 2;
+    const cobre = r && r.bottom > window.innerHeight * 0.6 && r.left < meio + 90 && r.right > meio - 90;
+    seta.style.bottom = cobre ? `${Math.round(window.innerHeight - r.top + 10)}px` : '';
+  };
+  const segue = () => {
+    if (atual >= n - 1) { auto = false; pinta(); document.getElementById('contato').scrollIntoView({ behavior: 'smooth' }); }
+    else vai(atual + 1);
+  };
+  const contaSegue = () => {   // os 2 s depois do fim do capítulo
+    clearTimeout(relogioSegue);
+    if (fimDoCapitulo && auto && !pausado && !sobre) relogioSegue = setTimeout(segue, SEGUE_EM);
+  };
+  const acabou = () => {
+    if (fimDoCapitulo || atual < 1) return;
+    fimDoCapitulo = true;
+    posicionaSeta();
+    raiz.classList.add('fim-capitulo');
+    contaSegue();
   };
   const controle = document.createElement('button');
   controle.type = 'button'; controle.className = 'auto-ctl'; controle.hidden = true;
@@ -158,32 +185,30 @@ document.addEventListener('DOMContentLoaded', () => {
     controle.setAttribute('aria-label', tocando ? 'Pausar a sequência' : 'Continuar a sequência');
     hud.classList.toggle('parado', !tocando && atual >= 1);
   };
-  const agenda = () => {
-    clearTimeout(relogioAuto);
+  const agenda = () => {   // chamado a cada troca de capítulo: espera o fim do vídeo (ou o tempo do capítulo)
+    clearTimeout(relogioAuto); clearTimeout(relogioSegue);
+    fimDoCapitulo = false;
+    raiz.classList.remove('fim-capitulo');
     pinta();
-    if (!auto || pausado || sobre || atual < 1) return;
-    relogioAuto = setTimeout(() => {
-      if (atual >= n - 1) { auto = false; pinta(); document.getElementById('contato').scrollIntoView({ behavior: 'smooth' }); }
-      else vai(atual + 1);
-    }, duracao(cenas[atual]));
+    if (atual < 1) return;
+    const cena = cenas[atual];
+    const video = 'umaVez' in cena.dataset && cena.querySelector('video.cena-video');
+    if (video) video.addEventListener('ended', acabou, { once: true });
+    relogioAuto = setTimeout(acabou, duracao(cena) + (video ? 1500 : 0));   // reserva, se o vídeo travar ou não carregar
   };
   // Convite para rolar: clicar faz o mesmo que rolar, o filme começa e segue sozinho
   const rolar = filme.querySelector('.rolar');
   if (rolar) rolar.addEventListener('click', () => vai(1));
+  if (seta) seta.addEventListener('click', segue);
+  window.addEventListener('resize', posicionaSeta);
 
   controle.addEventListener('click', () => {
     if (auto) pausado = !pausado;
-    else { auto = true; manual = false; pausado = false; autoDesde = performance.now(); }
-    agenda();
+    else { auto = true; pausado = false; }
+    pinta(); contaSegue();
   });
-  const assume = (e) => {   // a pessoa assumiu o controle
-    if (!auto || performance.now() - autoDesde < 1600) return;   // ignora a inércia do gesto que deu a partida
-    if (e.type === 'keydown' && !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '].includes(e.key)) return;
-    auto = false; manual = true; agenda();
-  };
-  ['wheel', 'touchmove', 'keydown'].forEach((tipo) => window.addEventListener(tipo, assume, { passive: true }));
-  palco.addEventListener('pointerover', (e) => { if (e.pointerType === 'mouse' && e.target.closest('.cena-painel')) { sobre = true; agenda(); } });
-  palco.addEventListener('pointerout', (e) => { if (e.pointerType === 'mouse' && e.target.closest('.cena-painel')) { sobre = false; agenda(); } });
+  palco.addEventListener('pointerover', (e) => { if (e.pointerType === 'mouse' && e.target.closest('.cena-painel')) { sobre = true; contaSegue(); } });
+  palco.addEventListener('pointerout', (e) => { if (e.pointerType === 'mouse' && e.target.closest('.cena-painel')) { sobre = false; contaSegue(); } });
 
   // Giro de câmera: desfoque de movimento horizontal durante a troca de cena.
   // Sobe rápido, atinge o pico no meio do giro e some quando a cena assenta. Só em telas com mouse,
@@ -206,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     quadroGiro = requestAnimationFrame(passo);
   };
 
-  let atual = -1, fracao = 0;
+  let atual = -1, fracao = 0, relogioPassagem = 0;
   const atualiza = () => {
     const p = Math.min(0.9999, Math.max(0, (window.scrollY - inicio()) / percurso()));
     const i = Math.floor(p * n);
@@ -226,10 +251,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (atual !== -1) { hud.classList.remove('corte'); void hud.offsetWidth; hud.classList.add('corte'); }   // cantos buscam o foco
     const anterior = atual;
     atual = i;
-    if (anterior !== -1) giroDeCamera(i < anterior);
-    if (i === 0) { auto = false; manual = false; pausado = false; }
-    else if (anterior === 0 && !manual && !auto) { auto = true; autoDesde = performance.now(); }
-    agenda();
+    // Capítulos que continuam a mesma imagem (data-entrada="continua") trocam por fusão, sem giro
+    const continua = anterior !== -1 && Math.abs(i - anterior) === 1 && cenas[Math.max(i, anterior)].dataset.entrada === 'continua';
+    clearTimeout(relogioPassagem);
+    if (continua) { raiz.dataset.passagem = 'continua'; relogioPassagem = setTimeout(() => delete raiz.dataset.passagem, 900); }
+    else delete raiz.dataset.passagem;
+    if (anterior !== -1 && !continua) giroDeCamera(i < anterior);
+    if (i === 0) { auto = false; pausado = false; }
+    else if (anterior === 0 || anterior === -1) auto = true;
     cenas.forEach((cena, m) => {
       cena.classList.toggle('ativa', m === i);
       cena.classList.toggle('visivel', m === i);   // liga o traço ciano do título (regra da LP geral)
@@ -239,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tocaVideo(cena, m === i);
       gira(cena, m === i);
     });
+    agenda();   // depois de criar o vídeo da cena, para ouvir o fim dele
     const proxima = cenas[i + 1] && cenas[i + 1].querySelector('img');
     if (proxima) proxima.loading = 'eager';
   };

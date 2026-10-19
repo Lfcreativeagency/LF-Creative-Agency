@@ -30,7 +30,7 @@
 <link rel="preload" href="assets/fonts/urbanist-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <link rel="stylesheet" href="base.css?v=2026-10-12a">
-<link rel="stylesheet" href="audiovisual.css?v=2026-10-19d">
+<link rel="stylesheet" href="audiovisual.css?v=2026-10-20b">
 
 <!-- Google Tag Manager: colar o mesmo snippet da LP geral quando o ID real existir -->
 </head>
@@ -60,9 +60,9 @@
 
 <main id="conteudo">
 
-<!-- FILME: sete cenas, do set à entrega. Com JS vira um palco fixo que troca de cena na rolagem;
+<!-- FILME: seis cenas, do set à entrega. Com JS vira um palco fixo que troca de cena na rolagem;
      sem JS ou com "reduzir movimento", as cenas ficam empilhadas como seções comuns. -->
-<section class="filme" id="filme" aria-label="Produção audiovisual em cinco cenas">
+<section class="filme" id="filme" aria-label="Produção audiovisual em seis cenas">
   <div class="palco">
     <article class="cena cena-abertura" id="cena-abertura" data-nome="Abertura" style="--foco:50%" data-tom="claro" data-video="assets/video/set.mp4">
       <div class="cena-midia">
@@ -78,30 +78,47 @@
         <div class="cena-painel">
           <p class="cena-apoio">Reunião, roteiro, produção, edição e publicação. A gente organiza tudo.</p>
           <a class="btn" data-cta="av_abertura_whatsapp" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20vi%20a%20p%C3%A1gina%20de%20produ%C3%A7%C3%A3o%20audiovisual%20da%20LF%20e%20quero%20conversar%20sobre%20um%20projeto%20de%20v%C3%ADdeo." target="_blank" rel="noopener">Falar sobre o meu projeto</a>
-          <p class="cena-numero rotulo" aria-hidden="true">01 / 05</p>
+          <p class="cena-numero rotulo" aria-hidden="true">01 / 06</p>
         </div>
       </div>
     </article>
-    <!-- Capítulo 1 do filme (19/10/2026): voo do avião de papel com a ideia. Voo, mãos com o storyboard e passagem do desenho para a praia. Toca uma vez e para no último quadro (data-uma-vez); data-dur segura a cena até o fim do vídeo. -->
-    <article class="cena" id="cena-reuniao" data-nome="Reunião" data-compacto data-lado-cel="topo" style="--foco:50%; --painel-l:30rem" data-video="assets/video/ideia.mp4" data-uma-vez data-dur="17">
+    <!-- Capítulos do filme (19/10/2026). Cada vídeo com data-uma-vez toca uma vez e para no último quadro;
+         depois aparece a seta "Continuar" e, sem clique em 2 s, a página desce sozinha.
+         data-entrada="continua": a cena entra por fusão, sem giro, porque continua a imagem da anterior. -->
+    <article class="cena" id="cena-ideia" data-nome="Ideia" data-compacto data-lado-cel="topo" style="--foco:50%; --painel-l:30rem" data-video="assets/video/ideia.mp4" data-uma-vez data-dur="8.7">
       <div class="cena-midia">
         <img src="assets/img/cena-ideia-1920.webp" srcset="assets/img/cena-ideia-1100.webp 1100w, assets/img/cena-ideia-1920.webp 1920w" sizes="100vw" width="1920" height="1072" alt="Um avião de papel voa sobre a orla do Rio de Janeiro ao entardecer e entra pela janela de um apartamento até pousar numa mesa de trabalho." decoding="async" loading="lazy">
       </div>
       <div class="cena-texto">
         <div class="cena-painel">
           <div class="cena-titulo">
-            <p class="rotulo">Etapa 1</p>
             <h2>Tudo começa<br> com uma <em>ideia</em></h2>
           </div>
-          <p class="cena-apoio">A gente começa ouvindo o que a sua empresa precisa. Daí saem a estratégia, o roteiro e o plano de filmagem.</p>
-          <a class="cena-link" data-cta="av_etapa_reuniao" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20quero%20marcar%20uma%20conversa%20sobre%20um%20v%C3%ADdeo%20para%20a%20minha%20empresa." target="_blank" rel="noopener">Marcar uma conversa</a>
-          <p class="cena-numero rotulo" aria-hidden="true">02 / 05</p>
+          <p class="cena-apoio">Pode ser um rascunho, uma frase ou só uma vontade.</p>
+          <a class="cena-link" data-cta="av_ideia" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20vi%20a%20p%C3%A1gina%20de%20audiovisual%20e%20quero%20contar%20a%20minha%20ideia%20de%20v%C3%ADdeo." target="_blank" rel="noopener">Contar a minha ideia</a>
+          <p class="cena-numero rotulo" aria-hidden="true">02 / 06</p>
         </div>
       </div>
     </article>
-    <article class="cena" id="cena-producao" data-nome="Produção" style="--foco:50%" data-lado="baixo" data-video="">
+    <article class="cena" id="cena-roteiro" data-nome="Roteiro" data-compacto data-entrada="continua" style="--foco:50%; --painel-l:30rem" data-video="assets/video/roteiro.mp4" data-uma-vez data-dur="6.4">
       <div class="cena-midia">
-        <img class="quadro on" data-video="assets/video/rua.mp4" src="assets/img/cena-rua-1920.webp" srcset="assets/img/cena-rua-1100.webp 1100w, assets/img/cena-rua-1920.webp 1920w" sizes="100vw" width="1920" height="1072" alt="Cinegrafista da LF filma na mão um casal correndo no calçadão da praia ao amanhecer." decoding="async" loading="lazy">
+        <img src="assets/img/cena-roteiro-1280.webp" width="1280" height="720" alt="Mãos pegam o avião de papel na mesa e o abrem: é um roteiro com um storyboard desenhado à mão de uma corrida na praia." decoding="async" loading="lazy">
+      </div>
+      <div class="cena-texto">
+        <div class="cena-painel">
+          <div class="cena-titulo">
+            <p class="rotulo">Etapa 1</p>
+            <h2>Reunião e <em>roteiro</em></h2>
+          </div>
+          <p class="cena-apoio">A gente ouve a sua ideia e transforma em roteiro, storyboard e plano de filmagem.</p>
+          <a class="cena-link" data-cta="av_etapa_reuniao" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20quero%20marcar%20uma%20conversa%20sobre%20um%20v%C3%ADdeo%20para%20a%20minha%20empresa." target="_blank" rel="noopener">Marcar uma conversa</a>
+          <p class="cena-numero rotulo" aria-hidden="true">03 / 06</p>
+        </div>
+      </div>
+    </article>
+    <article class="cena" id="cena-producao" data-nome="Produção" data-entrada="continua" style="--foco:50%" data-lado="baixo" data-video="">
+      <div class="cena-midia">
+        <img class="quadro on" data-video="assets/video/praia-storyboard.mp4" data-dur="5.2" src="assets/img/cena-storyboard-1280.webp" width="1280" height="720" alt="A câmera entra no primeiro quadro do storyboard e o desenho vira a gravação: o cinegrafista da LF filma na mão um casal correndo no calçadão da praia." decoding="async" loading="lazy">
         <img class="quadro" data-video="assets/video/moda.mp4" src="assets/img/cena-moda-1920.webp" srcset="assets/img/cena-moda-1100.webp 1100w, assets/img/cena-moda-1920.webp 1920w" sizes="100vw" width="1920" height="1072" alt="Equipe fotografa e filma uma modelo de vestido vermelho em uma escadaria de concreto." decoding="async" loading="lazy">
         <img class="quadro" src="assets/img/cena-carro-1920.webp" srcset="assets/img/cena-carro-1100.webp 1100w, assets/img/cena-carro-1920.webp 1920w" sizes="100vw" width="1920" height="1072" alt="Set montado em uma estrada de serra ao anoitecer, com um carro de faróis acesos." decoding="async" loading="lazy">
         <img class="quadro" data-video="assets/video/industria.mp4" src="assets/img/cena-industria-1920.webp" srcset="assets/img/cena-industria-1100.webp 1100w, assets/img/cena-industria-1920.webp 1920w" sizes="100vw" width="1920" height="1072" alt="Equipe de capacete e colete grava a entrevista de um diretor no pátio de um centro logístico." decoding="async" loading="lazy">
@@ -112,7 +129,7 @@
             <p class="rotulo">Etapa 2</p>
             <h2>Produção <em>audiovisual</em></h2>
           </div>
-          <p class="cena-apoio">Em estúdio ou em campo, a gente organiza tudo.</p>
+          <p class="cena-apoio">Em estúdio ou em campo, com equipe própria.</p>
           <ul class="cena-palavras">
             <li class="on">Direção de arte</li>
             <li>Luz e equipamento</li>
@@ -120,7 +137,7 @@
             <li>Equipe</li>
           </ul>
           <a class="cena-link" data-cta="av_etapa_producao" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20quero%20falar%20sobre%20a%20produ%C3%A7%C3%A3o%20de%20um%20v%C3%ADdeo%20com%20a%20LF%20Creative." target="_blank" rel="noopener">Falar sobre a minha produção</a>
-          <p class="cena-numero rotulo" aria-hidden="true">03 / 05</p>
+          <p class="cena-numero rotulo" aria-hidden="true">04 / 06</p>
         </div>
       </div>
     </article>
@@ -134,9 +151,9 @@
             <p class="rotulo">Etapa 3</p>
             <h2><em>Edição</em></h2>
           </div>
-          <p class="cena-apoio">Montagem, cor e som na nossa ilha de edição. Você assiste, pede ajustes e aprova.</p>
+          <p class="cena-apoio">Montagem, cor e som. Você assiste, pede ajustes e aprova.</p>
           <a class="cena-link" data-cta="av_etapa_edicao" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20vi%20a%20etapa%20de%20edi%C3%A7%C3%A3o%20na%20p%C3%A1gina%20da%20LF%20e%20quero%20conversar%20sobre%20um%20projeto." target="_blank" rel="noopener">Falar sobre o meu projeto</a>
-          <p class="cena-numero rotulo" aria-hidden="true">04 / 05</p>
+          <p class="cena-numero rotulo" aria-hidden="true">05 / 06</p>
         </div>
       </div>
     </article>
@@ -150,14 +167,18 @@
             <p class="rotulo">Etapa 4</p>
             <h2><em>Publicação</em></h2>
           </div>
-          <p class="cena-apoio">Nas redes e onde mais a campanha circular, até no outdoor.</p>
+          <p class="cena-apoio">Nas redes, na rua e no shopping.</p>
           <a class="cena-link" data-cta="av_etapa_publicacao" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20quero%20falar%20sobre%20um%20v%C3%ADdeo%20para%20a%20campanha%20da%20minha%20empresa." target="_blank" rel="noopener">Falar sobre a minha campanha</a>
-          <p class="cena-numero rotulo" aria-hidden="true">05 / 05</p>
+          <p class="cena-numero rotulo" aria-hidden="true">06 / 06</p>
         </div>
       </div>
     </article>
     <button class="rolar" type="button" aria-label="Começar a sequência das etapas">
       <span>Role para assistir</span>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+    <button class="seguir" type="button" aria-label="Ir para o próximo capítulo">   <!-- aparece quando o vídeo do capítulo termina -->
+      <span>Continuar</span>
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
     </button>
     <nav class="passos" aria-label="Cenas"></nav>
@@ -175,7 +196,7 @@
       <li><a class="atalho" data-cta="av_fim_campanha" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20quero%20produzir%20o%20filme%20de%20uma%20campanha." target="_blank" rel="noopener"><span class="rotulo">Para a marca</span>Quero uma campanha</a></li>
       <li><a class="atalho" data-cta="av_fim_agencia" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20sou%20de%20ag%C3%AAncia%20e%20quero%20conversar%20sobre%20a%20LF%20como%20produtora%20parceira." target="_blank" rel="noopener"><span class="rotulo">Para agências</span>Preciso de uma produtora parceira</a></li>
     </ul>
-    <p class="fim-outra revela">Não é nenhum desses? <a data-cta="av_fim_outra" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20tenho%20uma%20ideia%20de%20v%C3%ADdeo%20e%20quero%20conversar%20com%20a%20LF%20Creative." target="_blank" rel="noopener">Conte a sua ideia</a></p>
+    <p class="fim-outra revela">Não é nenhum desses? <a data-cta="av_fim_outra" href="https://wa.me/5521990939118?text=Ol%C3%A1%2C%20vi%20a%20p%C3%A1gina%20de%20audiovisual%20e%20quero%20contar%20a%20minha%20ideia%20de%20v%C3%ADdeo.20Creative." target="_blank" rel="noopener">Conte a sua ideia</a></p>
     <div class="fim-clientes revela">
       <p class="rotulo">Marcas que confiam na LF</p>
       <ul>
@@ -205,6 +226,6 @@
 </footer>
 
 <script src="base.js?v=2026-10-12a"></script>
-<script src="audiovisual.js?v=2026-10-19d"></script>
+<script src="audiovisual.js?v=2026-10-20b"></script>
 </body>
 </html>

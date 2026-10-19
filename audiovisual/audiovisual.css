@@ -405,3 +405,29 @@ body { background: var(--cor-preto); }
   .com-rolagem .cena[data-lado-cel="topo"] .cena-painel { top: 160px; bottom: auto; transform: translateY(-18px); }
   .com-rolagem .cena[data-lado-cel="topo"].ativa .cena-painel { transform: none; }
 }
+
+/* Capítulos que continuam a imagem do anterior (data-entrada="continua"): troca por fusão, sem giro.
+   Durante a passagem (data-passagem no html), nada desliza nem desfoca; a cena nova aparece por cima. */
+.com-rolagem .cena[data-entrada="continua"] .cena-midia :is(img, video):not(.quadro):not(.quadro-video) { transform: none; }
+[data-transicao="lateral"].com-rolagem .cena[data-entrada="continua"]:not(.ativa):not(.antes) { transform: none; opacity: 0; transition: opacity 600ms ease; }
+[data-transicao="lateral"].com-rolagem .cena[data-entrada="continua"].ativa { opacity: 1; transition: opacity 600ms ease; }
+[data-passagem="continua"][data-transicao="lateral"].com-rolagem .cena.antes { transform: none; transition: none; }
+[data-passagem="continua"].com-rolagem .cena .cena-midia { filter: none; transition: none; animation: none; }
+
+/* Fim do capítulo: seta "Continuar". Clicar desce; sem clique, a página desce sozinha em 2 s.
+   A posição sobe acima do painel quando ele ocupa o meio da base (o JS ajusta o bottom). */
+.seguir { display: none; }
+.com-rolagem .seguir {
+  position: absolute; z-index: 6; left: 50%; bottom: 76px; transform: translate(-50%, 8px);
+  display: grid; justify-items: center; gap: 4px; padding: 12px 22px 8px; cursor: pointer;
+  font: 500 .8125rem/1 var(--fonte-texto); letter-spacing: .18em; text-transform: uppercase; color: var(--cor-gelo);
+  background: rgba(12, 14, 16, .62); border: 1px solid rgba(244, 244, 242, .34); border-radius: 999px;   /* mesmo vidro dos painéis: lê sobre qualquer imagem */
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  opacity: 0; visibility: hidden; transition: opacity 400ms ease, transform 400ms var(--curva), visibility 0s 400ms;
+}
+.fim-capitulo.com-rolagem:not(.na-abertura) .seguir { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition: opacity 500ms ease, transform 500ms var(--curva), visibility 0s; }
+.seguir svg { animation: desce 1.6s var(--curva) infinite; }
+.seguir:hover svg { animation-duration: .9s; }
+.seguir:hover { border-color: var(--cor-ciano); }
+.seguir:focus-visible { outline: 2px solid var(--cor-ciano); outline-offset: 4px; }
+@media (max-width: 767px) { .com-rolagem .seguir { bottom: 52px; } }
