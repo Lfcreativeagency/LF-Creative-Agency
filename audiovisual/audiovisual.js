@@ -83,13 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let video = cena.querySelector('video.cena-video');
     if (!video && ligar) {
       video = document.createElement('video');
-      Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: arquivo });
+      Object.assign(video, { muted: true, loop: !('umaVez' in cena.dataset), playsInline: true, preload: 'auto', src: arquivo });
       video.setAttribute('aria-hidden', 'true');
       video.className = 'cena-video';
       video.addEventListener('playing', () => video.classList.add('tocando'), { once: true });   // entra em fade por cima da imagem
       cena.querySelector('.cena-midia').appendChild(video);
     }
     if (!video) return;
+    if (ligar && 'umaVez' in cena.dataset) video.currentTime = 0;   // cena que conta uma ação: sempre do começo, para no último quadro
     if (ligar) video.play().catch(() => {}); else video.pause();
   };
 
@@ -143,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const duracao = (cena) => {   // produção: 3,5 s por quadro; demais: tempo de leitura do texto, entre 3,8 e 5,5 s
     const q = cena.querySelectorAll('img.quadro').length;
     if (q > 1) return q * 3500;
+    if (cena.dataset.dur) return Number(cena.dataset.dur) * 1000;   // cena com vídeo de ação: o tempo do vídeo
     const letras = (cena.querySelector('.cena-painel') || cena).textContent.replace(/\s+/g, ' ').length;
     return Math.min(5500, Math.max(3800, 1800 + letras * 22));   // mais rápido: o filme passa sozinho
   };

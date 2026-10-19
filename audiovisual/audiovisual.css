@@ -399,3 +399,9 @@ body { background: var(--cor-preto); }
   .com-rolagem .cena-painel { --vidro: rgba(12, 14, 16, .82); }
   [data-painel="claro"].com-rolagem .cena-painel { --vidro: rgba(244, 244, 242, .9); }
 }
+
+/* Painel no alto, só no celular: para cenas em que a ação acontece embaixo, no centro (voo do avião de papel) */
+@media (max-width: 767px) {
+  .com-rolagem .cena[data-lado-cel="topo"] .cena-painel { top: 160px; bottom: auto; transform: translateY(-18px); }
+  .com-rolagem .cena[data-lado-cel="topo"].ativa .cena-painel { transform: none; }
+}
