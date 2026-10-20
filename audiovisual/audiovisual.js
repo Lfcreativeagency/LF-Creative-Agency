@@ -107,6 +107,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ligar) video.play().catch(() => {}); else video.pause();
   };
 
+  // Demonstração do painel do cliente: um iframe que roda sozinho. Carrega ao entrar na cena (do começo)
+  // e é descarregado ao sair, para não gastar nada fora da vez.
+  const tocaPainel = (cena, ligar) => {
+    const f = cena.querySelector('iframe.painel-demo');
+    if (!f || economia) return;
+    if (ligar) f.src = f.dataset.src + '&t=' + Date.now();
+    else f.removeAttribute('src');
+  };
+
   // Cena com vários quadros (produção): eles se revezam sozinhos, só enquanto a cena está ativa.
   // Cada quadro fica 3,5 s (ou data-dur); a passagem é um giro de câmera, com desfoque de movimento.
   // Quadro com data-video toca o vídeo nesse intervalo. A cada quadro entra mais uma palavra no painel.
@@ -278,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cena.inert = m !== i;                        // teclado e leitor de tela só veem a cena ativa
       botoes[m].setAttribute('aria-current', m === i ? 'true' : 'false');
       tocaVideo(cena, m === i);
+      tocaPainel(cena, m === i);
       gira(cena, m === i);
     });
     agenda();   // depois de criar o vídeo da cena, para ouvir o fim dele

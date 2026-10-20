@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel do cliente (demonstração da cena)</title>
+<meta name="robots" content="noindex">
+<style>
+@font-face { font-family: 'LEMON MILK'; src: url('../assets/fonts/lemonmilk-bold.woff2') format('woff2'); font-weight: 700; }
+@font-face { font-family: 'LEMON MILK'; src: url('../assets/fonts/lemonmilk-medium.woff2') format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Urbanist'; src: url('../assets/fonts/urbanist-latin.woff2') format('woff2'); font-weight: 400 500; }
+:root { --gelo:#F4F4F2; --preto:#0A0A0A; --ciano:#5CB8CC; --texto:#3D3D3D; --rotulo:#6B7076; --linha:#D4D7DA; --verde:#2F7D5B; --ambar:#B7791F; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--gelo); color: var(--texto); font: 400 16px/1.45 'Urbanist', system-ui, sans-serif; min-height: 100vh; }
+h1, h2, h3, .marca { font-family: 'LEMON MILK', sans-serif; font-weight: 700; color: var(--preto); letter-spacing: .01em; text-transform: uppercase; }
+.rotulo { font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--rotulo); font-weight: 500; }
+.app { display: grid; grid-template-rows: auto auto 1fr; min-height: 100vh; }
+.topo { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 40px; border-bottom: 1px solid var(--linha); background: var(--gelo); }
+.topo .marca { font-size: 1.05rem; }
+.topo .conta { display: flex; align-items: center; gap: 12px; font-size: .9rem; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--preto); color: var(--gelo); display: grid; place-items: center; font: 700 .8rem 'LEMON MILK'; }
+.abas { display: flex; gap: 6px; padding: 14px 40px 0; }
+.abas a { white-space: nowrap; padding: 10px 18px; border-radius: 999px 999px 0 0; text-decoration: none; color: var(--rotulo); font-weight: 500; font-size: .95rem; border-bottom: 2px solid transparent; }
+.abas a[aria-current="page"] { color: var(--preto); border-bottom-color: var(--ciano); }
+main { padding: 28px 40px 56px; display: grid; gap: 22px; align-content: start; max-width: 1180px; width: 100%; margin: 0 auto; }
+h1 { font-size: clamp(1.4rem, 1rem + 1.6vw, 2.1rem); line-height: 1.1; }
+.sub { font-size: 1.05rem; max-width: 40rem; }
+.cartao { background: #fff; border: 1px solid var(--linha); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.cartao .capa { position: relative; min-height: 300px; background: #111 center/cover; }
+.cartao .capa::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,.55)); }
+.play { position: absolute; z-index: 1; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 50%; background: rgba(244,244,242,.92); display: grid; place-items: center; }
+.play::before { content: ""; border-left: 20px solid var(--preto); border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-left: 5px; }
+.tempo { position: absolute; z-index: 1; right: 14px; bottom: 12px; color: #fff; font-size: .8rem; font-weight: 500; }
+.corpo { padding: 28px 30px; display: grid; gap: 14px; align-content: center; }
+.corpo h2 { font-size: 1.25rem; line-height: 1.15; }
+.estado { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: .92rem; color: var(--preto); }
+.estado i { width: 9px; height: 9px; border-radius: 50%; background: var(--ambar); }
+.estado.ok i { background: var(--verde); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 26px; border-radius: 999px; border: 1px solid var(--preto); background: var(--preto); color: var(--gelo); font: 500 1rem 'Urbanist'; text-decoration: none; cursor: pointer; }
+.btn.claro { background: transparent; color: var(--preto); }
+.acoes { display: flex; flex-wrap: wrap; gap: 12px; }
+.lista { display: grid; gap: 12px; }
+.linha { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; align-items: center; gap: 18px; background: #fff; border: 1px solid var(--linha); border-radius: 12px; padding: 12px 16px 12px 12px; }
+.linha .mini { height: 64px; border-radius: 8px; background: #111 center/cover; }
+.linha b { display: block; color: var(--preto); font-weight: 500; }
+.linha span { font-size: .88rem; color: var(--rotulo); }
+.palco { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.player { position: relative; aspect-ratio: 16 / 9; border-radius: 14px; background: #111 center/cover; overflow: hidden; }
+.player .barra { position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: linear-gradient(transparent, rgba(0,0,0,.7)); display: flex; align-items: center; gap: 12px; padding: 0 16px; color: #fff; font-size: .8rem; }
+.player .trilho { flex: 1; height: 3px; background: rgba(255,255,255,.35); border-radius: 3px; position: relative; }
+.player .trilho::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 38%; background: var(--ciano); border-radius: 3px; }
+.painel-lado { display: grid; gap: 14px; background: #fff; border: 1px solid var(--linha); border-radius: 14px; padding: 22px; }
+.painel-lado h3 { font-size: 1rem; }
+textarea { width: 100%; min-height: 92px; border: 1px solid var(--linha); border-radius: 10px; padding: 12px; font: 400 .95rem 'Urbanist'; background: var(--gelo); resize: none; }
+.formatos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.formato { background: #fff; border: 1px solid var(--linha); border-radius: 14px; padding: 18px; display: grid; gap: 12px; }
+.formato .qd { aspect-ratio: 16 / 9; border-radius: 8px; background: #111 center/cover; }
+.formato.v .qd { aspect-ratio: 9 / 16; height: 190px; width: auto; margin: 0 auto; }
+.formato.q .qd { aspect-ratio: 1; height: 190px; width: auto; margin: 0 auto; }
+.formato b { color: var(--preto); font-weight: 500; }
+@media (max-width: 767px) {
+  .topo, main { padding-left: 16px; padding-right: 16px; } .abas { padding: 10px 16px 0; overflow-x: auto; gap: 0; } .abas a { padding: 10px 12px; font-size: .9rem; }
+  .cartao, .palco { grid-template-columns: 1fr; } .cartao .capa { min-height: 200px; }
+  .formatos { grid-template-columns: 1fr; } .linha { grid-template-columns: 84px minmax(0, 1fr); } .linha .estado { grid-column: 1 / -1; }
+  .corpo { padding: 20px; } .topo .conta span { display: none; }
+}
+
+/* Modo demonstração (?auto=1): roda sozinho dentro da cena do filme. Sem rolagem, com folga embaixo para o painel de vidro da página. */
+body.auto { overflow: hidden; pointer-events: none; user-select: none; }
+body.auto .app { height: 100vh; min-height: 0; }
+body.auto .topo { display: none; }
+body.auto .abas { padding-top: 64px; }
+body.auto main { padding-bottom: 210px; }
+.cursor { position: fixed; z-index: 9; left: 0; top: 0; width: 26px; height: 26px; opacity: 0; transform: translate(60vw, 70vh); transition: transform 900ms cubic-bezier(.45, 0, .2, 1), opacity 300ms; filter: drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
+.cursor.on { opacity: 1; }
+.cursor.clica { animation: clica 280ms ease; }
+@keyframes clica { 50% { transform: var(--pos) scale(.82); } }
+.onda { position: fixed; z-index: 8; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; border: 2px solid var(--ciano); opacity: 0; }
+.onda.vai { animation: onda 520ms ease-out; }
+@keyframes onda { from { opacity: .9; transform: scale(.6); } to { opacity: 0; transform: scale(3); } }
+body.toca .player .trilho::after { animation: avanca 2.3s linear forwards; }
+@keyframes avanca { from { width: 6%; } to { width: 100%; } }
+.btn.feito { background: var(--verde); border-color: var(--verde); }
+@media (max-width: 767px) {
+  body.auto .sub { display: none; }
+  body.auto .abas { padding-top: 250px; }   /* o painel de vidro da página fica no alto, no celular */
+  body.auto main { padding-top: 14px; padding-bottom: 20px; gap: 14px; }
+  body.auto .cartao .capa { min-height: 150px; } body.auto .lista { display: none; }
+}
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topo">
+    <p class="marca">LF Creative</p>
+    <div class="conta"><span>Atlética Maré</span><div class="avatar" aria-hidden="true">AM</div></div>
+  </header>
+
+  <nav class="abas" aria-label="Seções do painel">
+    <a href="?tela=inicio" data-tela="inicio">Meus vídeos</a>
+    <a href="?tela=aprovar" data-tela="aprovar">Aprovar</a>
+    <a href="?tela=entregas" data-tela="entregas">Prontos para baixar</a>
+  </nav>
+
+  <main>
+    <section data-secao="inicio">
+      <p class="rotulo">Olá, Marina</p>
+      <h1>Seu vídeo novo está pronto</h1>
+      <p class="sub">Assista com calma. Se estiver tudo certo, é só aprovar. Se quiser mudar algo, é só avisar.</p>
+      <article class="cartao" style="margin-top:22px">
+        <div class="capa" style="background-image:url(../assets/img/cena-rua-1920.webp)"><div class="play"></div><span class="tempo">0:32</span></div>
+        <div class="corpo">
+          <p class="estado"><i></i>Esperando a sua resposta</p>
+          <h2>Filme da campanha de corrida</h2>
+          <p>Primeira versão, enviada hoje às 14h.</p>
+          <div class="acoes"><a class="btn" href="?tela=aprovar">Assistir e aprovar</a></div>
+        </div>
+      </article>
+      <div class="lista" style="margin-top:22px">
+        <div class="linha"><div class="mini" style="background-image:url(../assets/img/cena-moda-1100.webp)"></div><div><b>Vídeo para as redes, coleção verão</b><span>Em edição, previsto para sexta</span></div><span class="estado"><i></i>Em andamento</span></div>
+      </div>
+    </section>
+
+    <section data-secao="aprovar" hidden>
+      <p class="rotulo">Filme da campanha de corrida · versão 1</p>
+      <h1>O que achou?</h1>
+      <div class="palco" style="margin-top:22px">
+        <div class="player" style="background-image:url(../assets/img/cena-rua-1920.webp)"><div class="play"></div><div class="barra"><span>0:12</span><div class="trilho"></div><span>0:32</span></div></div>
+        <aside class="painel-lado">
+          <h3>Sua resposta</h3>
+          <div class="acoes"><a class="btn" href="?tela=entregas">Aprovar o vídeo</a></div>
+          <p class="rotulo">ou, se quiser mudar algo</p>
+          <textarea placeholder="Escreva aqui o que quer mudar. Pode dizer o minuto, se quiser."></textarea>
+          <div class="acoes"><a class="btn claro" href="?tela=inicio">Pedir ajuste</a></div>
+        </aside>
+      </div>
+    </section>
+
+    <section data-secao="entregas" hidden>
+      <p class="rotulo">Aprovado agora</p>
+      <h1>Pronto para baixar</h1>
+      <p class="sub">O mesmo vídeo, no tamanho certo para cada lugar.</p>
+      <div class="formatos" style="margin-top:22px">
+        <div class="formato"><div class="qd" style="background-image:url(../assets/img/cena-rua-1920.webp)"></div><b>Para o site e o YouTube</b><span class="rotulo">Horizontal</span><a class="btn" href="#">Baixar</a></div>
+        <div class="formato q"><div class="qd" style="background-image:url(../assets/img/cena-rua-1920.webp)"></div><b>Para o feed do Instagram</b><span class="rotulo">Quadrado</span><a class="btn" href="#">Baixar</a></div>
+        <div class="formato v"><div class="qd" style="background-image:url(../assets/img/cena-rua-1100.webp)"></div><b>Para stories e reels</b><span class="rotulo">Em pé</span><a class="btn" href="#">Baixar</a></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+const q = new URLSearchParams(location.search);
+const auto = q.get('auto') === '1';
+function mostra(t) {
+  document.querySelectorAll('[data-secao]').forEach((s) => { s.hidden = s.dataset.secao !== t; });
+  document.querySelectorAll('[data-tela]').forEach((a) => { if (a.dataset.tela === t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+}
+mostra(q.get('tela') || 'inicio');
+
+if (auto) {
+  document.body.classList.add('auto');
+  const cursor = document.createElement('div'); cursor.className = 'cursor';
+  cursor.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26"><path d="M5 3l14 8-6 2 3 7-3 1-3-7-5 4z" fill="#0A0A0A" stroke="#F4F4F2" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  const onda = document.createElement('div'); onda.className = 'onda';
+  document.body.append(cursor, onda);
+  const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+  const vaiPara = async (alvo) => {   // move o cursor até o botão, aperta e devolve
+    const r = alvo.getBoundingClientRect();
+    const x = r.left + r.width * 0.62, y = r.top + r.height * 0.55;
+    cursor.classList.add('on'); cursor.style.transform = `translate(${x}px, ${y}px)`;
+    await espera(1000);
+    cursor.style.setProperty('--pos', `translate(${x}px, ${y}px)`);
+    cursor.classList.remove('clica'); void cursor.offsetWidth; cursor.classList.add('clica');
+    onda.style.left = x + 'px'; onda.style.top = y + 'px'; onda.classList.remove('vai'); void onda.offsetWidth; onda.classList.add('vai');
+    await espera(260);
+  };
+  (async () => {
+    await espera(1300);
+    await vaiPara(document.querySelector('[data-secao="inicio"] .btn'));
+    mostra('aprovar'); document.body.classList.add('toca');
+    await espera(2700);
+    await vaiPara(document.querySelector('[data-secao="aprovar"] .btn:not(.claro)'));
+    document.body.classList.remove('toca'); mostra('entregas');
+    await espera(900);
+    const baixar = document.querySelector('[data-secao="entregas"] .formato .btn');
+    await vaiPara(baixar);
+    baixar.textContent = 'Baixado'; baixar.classList.add('feito');
+  })();
+} else {
+  document.querySelectorAll('.abas a').forEach((a) => a.addEventListener('click', () => {}));
+}
+</script>
+</body>
+</html>

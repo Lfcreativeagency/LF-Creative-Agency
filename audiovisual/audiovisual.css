@@ -436,3 +436,13 @@ body { background: var(--cor-preto); }
    o texto e o logo de uma cena de baixo apareciam por cima da imagem da cena ativa. */
 .com-rolagem .cena { isolation: isolate; }
 [data-passagem="continua"].com-rolagem .cena:not(.ativa) .cena-texto { opacity: 0; transition: opacity 180ms ease; }
+
+/* Demonstração do painel do cliente: o iframe cobre a imagem de reserva e não recebe cliques */
+.com-rolagem .cena-midia iframe.painel-demo { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: var(--cor-gelo); pointer-events: none; }
+.cena-midia iframe.painel-demo { display: none; }
+.com-rolagem .cena-midia iframe.painel-demo { display: block; }
+
+/* Cena do painel no celular: o painel de vidro vira só um título no alto, para a demonstração aparecer inteira */
+@media (max-width: 767px) {
+  .com-rolagem #cena-painel .cena-apoio, .com-rolagem #cena-painel .cena-link { display: none; }
+}
