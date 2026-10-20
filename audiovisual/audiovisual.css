@@ -431,3 +431,8 @@ body { background: var(--cor-preto); }
 .seguir:hover { border-color: var(--cor-ciano); }
 .seguir:focus-visible { outline: 2px solid var(--cor-ciano); outline-offset: 4px; }
 @media (max-width: 767px) { .com-rolagem .seguir { bottom: 52px; } }
+
+/* Cada cena isola as próprias camadas: sem isso, numa passagem por fusão (cena sem transform),
+   o texto e o logo de uma cena de baixo apareciam por cima da imagem da cena ativa. */
+.com-rolagem .cena { isolation: isolate; }
+[data-passagem="continua"].com-rolagem .cena:not(.ativa) .cena-texto { opacity: 0; transition: opacity 180ms ease; }

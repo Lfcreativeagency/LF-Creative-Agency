@@ -39,6 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const n = cenas.length;
   raiz.style.setProperty('--cenas', n);
+
+  // Imagens das cenas de trás só carregam quando a pessoa chega perto delas. O navegador não ajuda aqui:
+  // as cenas ficam empilhadas dentro da tela, então o loading="lazy" carrega tudo de uma vez.
+  const adiadas = cenas.map((cena, i) => i < 2 ? [] : [...cena.querySelectorAll('.cena-midia img')].map((img) => {
+    const par = { img, src: img.getAttribute('src'), srcset: img.getAttribute('srcset') };
+    img.removeAttribute('srcset'); img.removeAttribute('src');
+    return par;
+  }));
+  const carrega = (i) => { (adiadas[i] || []).splice(0).forEach(({ img, src, srcset }) => { if (srcset) img.srcset = srcset; img.src = src; }); };
   raiz.classList.add('com-rolagem');
 
   // Opções visuais. Padrões aprovados pelo Breno em 12/10/2026: transição lateral e vidro escuro.
@@ -269,8 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
       gira(cena, m === i);
     });
     agenda();   // depois de criar o vídeo da cena, para ouvir o fim dele
-    const proxima = cenas[i + 1] && cenas[i + 1].querySelector('img');
-    if (proxima) proxima.loading = 'eager';
+    carrega(i + 1); carrega(i + 2);   // a próxima e a seguinte já vão chegando
   };
 
   // Encaixe: quando a rolagem para, a página assenta numa cena inteira.
