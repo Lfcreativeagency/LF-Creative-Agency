@@ -86,6 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Vídeo da cena: só é criado quando a cena entra, e só se data-video tiver um arquivo
   const economia = navigator.connection && navigator.connection.saveData;
+  // Celular em pé: versões dos vídeos já recortadas em 9:16 (um terço do peso, mesma imagem que o celular mostraria)
+  const emPe = window.matchMedia('(max-width: 767px)').matches && window.innerHeight > window.innerWidth;
+  const arq = (f) => (emPe ? f.replace(/\.mp4$/, '-m.mp4') : f);
   const versao = (document.currentScript || document.querySelector('script[src*="audiovisual.js"]')).src.replace(/^[^?]*/, '');   // mesma ?v= do script: vídeo trocado não fica preso no cache
   const tocaVideo = (cena, ligar) => {
     const arquivo = cena.dataset.video;
@@ -93,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let video = cena.querySelector('video.cena-video');
     if (!video && ligar) {
       video = document.createElement('video');
-      Object.assign(video, { muted: true, loop: !('umaVez' in cena.dataset), playsInline: true, preload: 'auto', src: arquivo + versao });
+      Object.assign(video, { muted: true, loop: !('umaVez' in cena.dataset), playsInline: true, preload: 'auto', src: arq(arquivo) + versao });
       video.setAttribute('aria-hidden', 'true');
       video.className = 'cena-video';
       video.addEventListener('playing', () => video.classList.add('tocando'), { once: true });   // entra em fade por cima da imagem
@@ -122,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
       [q, quadros[(k + 1) % quadros.length]].forEach((el) => {   // o atual e o seguinte, já carregando
         if (!el.dataset.video || economia || el.videoDoQuadro) return;
         const video = document.createElement('video');
-        Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: el.dataset.video });
+        Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: arq(el.dataset.video) });
         video.className = 'quadro-video'; video.setAttribute('aria-hidden', 'true');
         el.after(video);
         el.videoDoQuadro = video;
