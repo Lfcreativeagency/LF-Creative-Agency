@@ -306,6 +306,7 @@
 @media (min-width: 768px) { .fim-clientes ul { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 46rem; } }
 .fim-clientes img { height: 26px; width: auto; max-width: 100%; object-fit: contain; object-position: 0 50%; filter: invert(1); opacity: .85; }
 .fim-clientes img.alto { height: 48px; }
+.fim-clientes img.cor { filter: none; }
 .marca-nome { font-family: var(--fonte-titulo); font-weight: 500; font-size: .9375rem; letter-spacing: .04em; text-transform: uppercase; color: rgba(244, 244, 242, .85); }
 .fim a:not(.btn), .rodape a { color: var(--cor-gelo); }
 .fim a:not(.btn):hover, .rodape a:hover { text-decoration-color: var(--cor-gelo); }
